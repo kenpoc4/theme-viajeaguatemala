@@ -19,3 +19,14 @@ define( 'VGUATE_THEME_URI', get_template_directory_uri() );
  * Include custom post types
  */
 require_once VGUATE_THEME_DIR . '/inc/post-types.php';
+
+/**
+ * Redirect home to blog archive
+ */
+function vguate_redirect_home_to_blog() {
+    if ( is_home() && ! is_paged() ) {
+        wp_redirect( home_url( '/blog/' ), 301 );
+        exit;
+    }
+}
+add_action( 'template_redirect', 'vguate_redirect_home_to_blog' );
