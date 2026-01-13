@@ -21,6 +21,11 @@ define( 'VGUATE_THEME_URI', get_template_directory_uri() );
 require_once VGUATE_THEME_DIR . '/inc/post-types.php';
 
 /**
+ * Include enqueue scripts and styles
+ */
+require_once VGUATE_THEME_DIR . '/inc/enqueue-scripts.php';
+
+/**
  * Redirect home to blog archive
  */
 function vguate_redirect_home_to_blog() {
