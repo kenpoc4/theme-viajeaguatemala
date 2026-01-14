@@ -51,6 +51,23 @@
     --breakpoint-md: 768px;
     --breakpoint-lg: 992px;
     --breakpoint-xl: 1200px;
+
+    /* Transiciones y Animaciones - Estilo Spotify */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Sombras - Estilo Spotify */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
 }
 
 /* ==========================================
@@ -60,6 +77,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: var(--font-primary);
     font-size: var(--font-size-base);
@@ -67,6 +88,8 @@ body {
     line-height: 1.6;
     color: var(--color-text);
     background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* ==========================================
@@ -113,11 +136,88 @@ p {
 a {
     color: var(--color-primary);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all var(--transition-base);
+    outline: none;
 }
 
 a:hover {
-    color: var(--color-secondary);
+    color: var(--color-contrast);
+    transform: translateY(-1px);
+}
+
+a:focus-visible {
+    outline: 3px solid var(--color-contrast);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+}
+
+a:active {
+    transform: translateY(0);
+}
+
+/* ==========================================
+   Botones - Estilo Spotify
+   ========================================== */
+button,
+.button,
+input[type="submit"],
+input[type="button"] {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: var(--font-size-base);
+    padding: 14px 32px;
+    border: none;
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    outline: none;
+    text-align: center;
+    display: inline-block;
+}
+
+.button--primary {
+    background-color: var(--color-primary);
+    color: var(--color-black);
+}
+
+.button--primary:hover {
+    background-color: var(--color-primary);
+    transform: scale(1.04);
+    box-shadow: var(--shadow-lg);
+}
+
+.button--secondary {
+    background-color: var(--color-contrast);
+    color: var(--color-white);
+}
+
+.button--secondary:hover {
+    background-color: var(--color-contrast);
+    transform: scale(1.04);
+    box-shadow: var(--shadow-lg);
+}
+
+.button--outline {
+    background-color: transparent;
+    color: var(--color-text);
+    border: 2px solid var(--color-text);
+}
+
+.button--outline:hover {
+    background-color: var(--color-text);
+    color: var(--color-white);
+    transform: scale(1.04);
+}
+
+button:focus-visible,
+.button:focus-visible {
+    outline: 3px solid var(--color-contrast);
+    outline-offset: 4px;
+}
+
+button:active,
+.button:active {
+    transform: scale(0.98);
 }
 
 /* ==========================================
@@ -127,6 +227,7 @@ img {
     max-width: 100%;
     height: auto;
     display: block;
+    transition: all var(--transition-base);
 }
 
 /* ==========================================

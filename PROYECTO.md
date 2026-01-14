@@ -2,11 +2,12 @@
 
 ## Descripción del Proyecto
 
-Theme personalizado para WordPress enfocado en crear un blog sobre viajes a Guatemala. El proyecto está diseñado con una arquitectura modular y escalable, preparado para futuras expansiones.
+Theme personalizado para WordPress enfocado en crear un blog sobre viajes a Guatemala. El proyecto está diseñado con una arquitectura modular y escalable, con un diseño inspirado en Spotify for Artists, transmitiendo profesionalismo accesible y modernidad.
 
 **Versión actual:** 0.1
 **Autor:** Kenny Poncio
 **Text Domain:** vguate
+**Sitio de Referencia:** [Spotify for Artists - Get Started](https://artists.spotify.com/get-started)
 
 ---
 
@@ -17,18 +18,22 @@ viaje-a-guatemala/
 ├── assets/
 │   ├── css/
 │   │   ├── global/          # Estilos globales
-│   │   │   ├── normalize.css
-│   │   │   ├── fonts.css
-│   │   │   └── global.css
+│   │   │   ├── normalize.css    # Normalización de navegadores
+│   │   │   ├── fonts.css        # Importación de Google Fonts
+│   │   │   └── global.css       # Estilos globales y variables
 │   │   ├── post-types/      # Estilos por post type
+│   │   │   └── blog.css         # Estilos del blog (layout 40/60)
 │   │   ├── singles/         # Estilos para singles
 │   │   └── pages/           # Estilos para pages
 │   └── fonts/               # Fuentes locales (preparado para futuro)
 ├── inc/
 │   ├── post-types.php       # Gestión de custom post types
-│   └── enqueue-scripts.php  # Sistema de carga de estilos/scripts
+│   ├── enqueue-scripts.php  # Sistema de carga de estilos/scripts
+│   └── theme-options.php    # Opciones del tema (imagen hero, etc.)
 ├── style.css                # Información del tema
 ├── functions.php            # Funciones principales del tema
+├── header.php               # Header lateral con imagen de fondo
+├── footer.php               # Footer del sitio
 ├── index.php                # Redirección al blog
 ├── archive-blog.php         # Template para /blog/
 └── PROYECTO.md              # Este archivo
@@ -50,7 +55,7 @@ Permite crear custom post types con configuración simple mediante un array:
 
 ```php
 vguate_register_post_type( array(
-    'post_type'      => 'blog',           // Slug del post type
+    'post_type'      => 'blog',
     'singular_name'  => 'Entrada de Blog',
     'plural_name'    => 'Blog',
     'menu_icon'      => 'dashicons-edit-large',
@@ -75,7 +80,34 @@ Simplemente agregar más llamadas a `vguate_register_post_type()` en la función
 
 ---
 
-### 2. Sistema de Estilos
+### 2. Sistema de Theme Options
+
+**Archivo:** `inc/theme-options.php`
+
+Sistema de configuración del tema en el dashboard de WordPress.
+
+#### Características:
+
+- **Ubicación:** Apariencia > Opciones del Tema
+- **Imagen Hero:** Selector de imagen para background del header lateral
+- **Media Library:** Integración completa con WordPress Media Library
+- **Preview:** Vista previa en tiempo real de la imagen seleccionada
+- **Función Helper:** `vguate_get_hero_image()` para obtener la imagen
+
+#### Uso:
+
+```php
+$hero_image = vguate_get_hero_image(); // Retorna URL de la imagen o false
+```
+
+**Recomendaciones de imagen:**
+- Tamaño: 800x1600px o mayor
+- Orientación: Vertical
+- Formato: JPG, PNG o WebP
+
+---
+
+### 3. Sistema de Estilos
 
 **Archivo:** `inc/enqueue-scripts.php`
 
@@ -83,9 +115,9 @@ Sistema inteligente que carga estilos globales y específicos automáticamente s
 
 #### Orden de carga:
 
-1. **fonts.css** - Fuentes de Google Fonts
+1. **fonts.css** - Fuentes de Google Fonts (Poppins)
 2. **normalize.css** - Normalización de estilos entre navegadores
-3. **global.css** - Estilos globales del sitio
+3. **global.css** - Estilos globales con variables CSS
 4. **Estilos específicos** (condicionales según contexto)
 
 #### Carga automática de estilos específicos:
@@ -99,16 +131,60 @@ Sistema inteligente que carga estilos globales y específicos automáticamente s
 - **Pages:** `assets/css/pages/{page-slug}.css`
   - Ejemplo: Página "contacto" → `pages/contacto.css`
 
-#### Funciones disponibles:
+---
 
-- `vguate_enqueue_styles()` - Función principal
-- `vguate_enqueue_post_type_style()` - Carga estilos de post types
-- `vguate_enqueue_single_style()` - Carga estilos de singles
-- `vguate_enqueue_page_style()` - Carga estilos de páginas
+### 4. Header Lateral con Imagen de Fondo
+
+**Archivos:** `header.php` y `footer.php`
+
+Header lateral sticky (40% ancho) con altura fija de 100vh y sin scroll.
+
+#### Características del Header:
+
+- **Layout:** 40% header lateral / 60% contenido
+- **Posición:** Sticky con altura fija 100vh
+- **Background:** Imagen configurable desde Theme Options
+- **Overlay:** Degradado oscuro para legibilidad
+- **Distribución:**
+  - Branding (arriba) - fijo
+  - Navegación (centro) - scrolleable si es necesario
+  - Info adicional (abajo) - fija
+
+#### Estilos Adaptativos:
+
+**Sin imagen hero:**
+- Fondo gris claro (#ededed)
+- Textos oscuros
+- Bordes grises
+
+**Con imagen hero:**
+- Background image completo
+- Textos blancos con sombra
+- Overlay degradado
+- Bordes blancos semitransparentes
 
 ---
 
-### 3. Redirección a Blog
+### 5. Template del Blog (Layout 40/60)
+
+**Archivo:** `archive-blog.php`
+
+Template con diseño lateral inspirado en Spotify.
+
+#### Características:
+
+- Layout lateral 40/60
+- Cards con estilo Spotify:
+  - Border radius generoso (16px)
+  - Sombras sutiles
+  - Hover effects (scale + translateY)
+  - Aspect ratio 16:9 para imágenes
+- Botón "Leer más" con flecha animada
+- Paginación moderna con bordes redondeados
+
+---
+
+### 6. Redirección a Blog
 
 **Archivo:** `index.php` y `functions.php`
 
@@ -120,35 +196,31 @@ Se implementó una redirección automática de la home (`/`) al blog (`/blog/`):
 
 ---
 
-### 4. Template del Blog
+## Diseño y UX/UI - Inspirado en Spotify
 
-**Archivo:** `archive-blog.php`
+### Referencia de Diseño
 
-Template para mostrar el listado de entradas del blog con:
+**Sitio:** [Spotify for Artists - Get Started](https://artists.spotify.com/get-started)
 
-- Header con título del blog
-- Loop de WordPress mostrando:
-  - Imagen destacada (si existe)
-  - Título con enlace
-  - Fecha y autor
-  - Extracto
-  - Botón "Leer más"
-- Paginación
-- Mensaje cuando no hay entradas
+El diseño replica la sensación profesional y moderna de Spotify, con énfasis en:
 
----
+- ✨ Profesionalismo accesible
+- ✨ Minimalismo con personalidad
+- ✨ Interactividad fluida
+- ✨ Jerarquía visual clara
+- ✨ Espacios blancos generosos
 
-## Configuración de Estilos
-
-### Paleta de Colores Minimalista
+### Paleta de Colores
 
 **Archivo:** `assets/css/global/global.css`
 
+Los colores coinciden con la identidad de Spotify:
+
 ```css
 /* Colores principales */
---color-primary: #1ED760;      /* Verde brillante - Principal */
+--color-primary: #1ED760;      /* Verde Spotify - Principal */
 --color-secondary: #ff7439;    /* Naranja - Secundario */
---color-contrast: #4100f4;     /* Azul/morado - Contraste */
+--color-contrast: #4100f4;     /* Púrpura Spotify - Contraste */
 
 /* Colores de texto */
 --color-text: #000000;         /* Negro - Texto principal */
@@ -165,6 +237,49 @@ Template para mostrar el listado de entradas del blog con:
 --color-border: #cccccc;
 ```
 
+### Transiciones y Animaciones - Estilo Spotify
+
+```css
+/* Transiciones suaves */
+--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+--transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+--transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+/* Sombras sutiles */
+--shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+--shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+--shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+--shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+
+/* Border radius generosos */
+--radius-sm: 4px;
+--radius-md: 8px;
+--radius-lg: 16px;
+--radius-xl: 24px;
+```
+
+### Efectos Interactivos
+
+#### Botones:
+- Padding: 14px 32px
+- Border radius: 24px (muy redondeados)
+- Font weight: 700
+- Hover: `scale(1.04)` + sombra
+- Active: `scale(0.98)`
+- Focus: outline púrpura de 3px
+
+#### Cards del Blog:
+- Border radius: 16px
+- Sombra base: subtle
+- Hover: `translateY(-4px)` + `scale(1.01)` + sombra grande
+- Imagen: `scale(1.08)` + brightness en hover
+- Transiciones: 300ms cubic-bezier
+
+#### Enlaces:
+- Hover: color púrpura + `translateY(-1px)`
+- Focus: outline púrpura de 3px
+- Active: sin transform
+
 ### Tipografía
 
 **Fuente:** Poppins (Google Fonts)
@@ -175,15 +290,16 @@ Template para mostrar el listado de entradas del blog con:
 - **400** - Regular (cuerpo de texto)
 - **500** - Medium
 - **600** - SemiBold (títulos h2, h3)
-- **700** - Bold (títulos h1)
+- **700** - Bold (títulos h1, botones)
+- **800** - ExtraBold (títulos principales)
 
-#### Variables de fuente:
-```css
---font-primary: 'Poppins', sans-serif;    /* Body y textos */
---font-secondary: 'Poppins', sans-serif;  /* Títulos */
-```
+#### Características tipográficas:
+- Títulos: font-weight 700-800
+- Letter-spacing: -0.02em (más compacto)
+- Line-height: 1.3 para títulos, 1.6-1.7 para texto
+- Font smoothing habilitado
 
-### Espaciados
+### Espaciados Generosos
 
 ```css
 --spacing-xs: 0.5rem;   /* 8px */
@@ -192,6 +308,12 @@ Template para mostrar el listado de entradas del blog con:
 --spacing-lg: 3rem;     /* 48px */
 --spacing-xl: 4rem;     /* 64px */
 ```
+
+**Aplicación:**
+- Header: padding-xl (64px)
+- Contenido: padding-xl (64px)
+- Gap entre cards: spacing-xl
+- Padding interno cards: spacing-lg
 
 ### Tamaños de Fuente
 
@@ -204,7 +326,7 @@ Template para mostrar el listado de entradas del blog con:
 --font-size-3xl: 2.5rem;    /* 40px */
 ```
 
-### Breakpoints
+### Breakpoints Responsive
 
 ```css
 --breakpoint-sm: 576px;
@@ -212,6 +334,24 @@ Template para mostrar el listado de entradas del blog con:
 --breakpoint-lg: 992px;
 --breakpoint-xl: 1200px;
 ```
+
+#### Comportamiento responsive:
+
+**Mobile (< 768px):**
+- Layout vertical (header arriba)
+- Header: 60vh mínimo con imagen
+- Botones: ancho completo
+- Padding reducido pero generoso
+
+**Tablet (769px - 1024px):**
+- Layout 35/65
+- Padding intermedio
+- Tipografía adaptada
+
+**Desktop (> 1024px):**
+- Layout 40/60
+- Header sticky con altura fija
+- Espaciados completos
 
 ---
 
@@ -227,58 +367,74 @@ VGUATE_THEME_URI   // URI del tema
 
 ---
 
+## Setup del Theme
+
+**Archivo:** `functions.php` - Función `vguate_theme_setup()`
+
+### Características habilitadas:
+
+- ✅ Imágenes destacadas (`post-thumbnails`)
+- ✅ Títulos dinámicos (`title-tag`)
+- ✅ HTML5 markup (search-form, comment-form, gallery, etc.)
+- ✅ Menú de navegación principal registrado
+
+### Menús registrados:
+
+```php
+'primary' => 'Menú Principal'
+```
+
+---
+
 ## Próximos Pasos Sugeridos
 
 ### Alta prioridad:
 
-1. **Crear templates faltantes:**
-   - `header.php` - Cabecera del sitio
-   - `footer.php` - Pie de página
-   - `single-blog.php` - Template para entradas individuales del blog
+1. **Template para single blog:**
+   - `single-blog.php` - Template para entradas individuales
+   - Estilos específicos en `assets/css/singles/blog.css`
 
-2. **Estilos específicos del blog:**
-   - `assets/css/post-types/blog.css` - Estilos del listado de blog
-   - `assets/css/singles/blog.css` - Estilos de entradas individuales
+2. **Navegación mejorada:**
+   - Crear menú en WordPress (Apariencia > Menús)
+   - Asignar a ubicación "Menú Principal"
 
-3. **Navegación:**
-   - Menú principal
-   - Registro de menús en `functions.php`
-
-4. **Widgets:**
-   - Áreas de widgets (sidebar, footer)
-   - Registro de sidebars
+3. **Contenido del header:**
+   - Personalizar sección `.site-header__info`
+   - Agregar llamados a la acción o información adicional
 
 ### Media prioridad:
 
-5. **Optimizaciones:**
+4. **Optimizaciones:**
    - Tamaños de imágenes personalizados
-   - Soporte para imagen destacada
-   - Títulos dinámicos
-   - Scripts JavaScript (si es necesario)
+   - Lazy loading de imágenes
+   - Minificación de CSS
 
-6. **SEO y Meta:**
+5. **SEO y Meta:**
    - Meta tags básicos
    - Open Graph
    - Schema.org markup
 
-7. **Funcionalidades adicionales:**
+6. **Funcionalidades adicionales:**
    - Breadcrumbs
    - Búsqueda personalizada
    - Compartir en redes sociales
+   - Related posts
 
 ### Baja prioridad:
 
-8. **Post types adicionales:**
+7. **Post types adicionales:**
    - Destinos turísticos
    - Guías de viaje
    - Testimonios
    - Galería de fotos
 
-9. **Funcionalidades avanzadas:**
+8. **Funcionalidades avanzadas:**
    - Modo oscuro
    - Multiidioma
    - Formulario de contacto
    - Newsletter
+   - Animaciones de scroll
+   - Micro-interacciones
 
 ---
 
@@ -292,9 +448,19 @@ VGUATE_THEME_URI   // URI del tema
 
 ### Después de activar el tema:
 
-1. Ir a **Ajustes > Enlaces permanentes**
-2. Guardar de nuevo (sin cambiar nada)
-3. Esto regenera las reglas de rewrite para que funcione `/blog/`
+1. **Regenerar permalinks:**
+   - Ir a Ajustes > Enlaces permanentes
+   - Guardar de nuevo (sin cambiar nada)
+   - Esto regenera las reglas de rewrite para `/blog/`
+
+2. **Configurar imagen hero:**
+   - Ir a Apariencia > Opciones del Tema
+   - Subir imagen (recomendado: 800x1600px vertical)
+   - Guardar configuración
+
+3. **Crear menú:**
+   - Ir a Apariencia > Menús
+   - Crear menú y asignarlo a "Menú Principal"
 
 ### Desarrollo
 
@@ -302,6 +468,16 @@ VGUATE_THEME_URI   // URI del tema
 - Seguir el sistema de nomenclatura: `vguate_` como prefijo
 - Mantener la estructura modular en `/inc/`
 - Documentar funciones con DocBlocks
+- Respetar las variables CSS para consistencia
+
+### Accesibilidad
+
+El tema incluye:
+- Estados focus visibles (outline de 3px)
+- Contraste de colores AA/AAA
+- Navegación por teclado
+- Semántica HTML5 correcta
+- ARIA labels donde corresponde
 
 ---
 
@@ -325,15 +501,61 @@ git log --oneline
 - **Regenerar permalinks:** Ajustes > Enlaces permanentes > Guardar
 - **Debug:** Activar `WP_DEBUG` en `wp-config.php`
 - **Limpiar cache:** Plugins de cache si existen
+- **Imagen hero:** Apariencia > Opciones del Tema
 
 ---
 
-## Recursos
+## Recursos y Referencias
+
+### Diseño y UX/UI
+
+- **Referencia principal:** [Spotify for Artists - Get Started](https://artists.spotify.com/get-started)
+- **Análisis de diseño:** Layout lateral, cards, botones, transiciones
+- **Paleta de colores:** Verde #1ED760, Púrpura #4100f4
+
+### WordPress
 
 - [WordPress Theme Handbook](https://developer.wordpress.org/themes/)
 - [WordPress Template Hierarchy](https://developer.wordpress.org/themes/basics/template-hierarchy/)
+- [WordPress Options API](https://developer.wordpress.org/plugins/settings/options-api/)
+
+### Tipografía y Estilos
+
 - [Google Fonts - Poppins](https://fonts.google.com/specimen/Poppins)
 - [CSS Variables Guide](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
+- [CSS Transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Transitions)
+
+---
+
+## Changelog
+
+### v0.1 - 2026-01-14
+
+#### Agregado:
+- Sistema de custom post types reutilizable
+- Custom post type "blog" con URL `/blog/`
+- Sistema de estilos con carga condicional
+- Header lateral sticky (40%) con imagen de fondo
+- Footer básico
+- Theme options para configurar imagen hero
+- Diseño inspirado en Spotify for Artists
+- Paleta de colores Spotify (verde, púrpura)
+- Fuente Poppins con múltiples pesos
+- Cards con hover effects estilo Spotify
+- Botones con animaciones scale
+- Paginación moderna
+- Transiciones y animaciones suaves
+- Sistema responsive (mobile, tablet, desktop)
+- Estados focus accesibles
+- Redirección automática a `/blog/`
+
+#### Estilos:
+- Variables CSS para colores, espaciados, transiciones
+- Normalize.css para consistencia entre navegadores
+- Border radius generosos (24px en botones)
+- Sombras sutiles en múltiples niveles
+- Scroll behavior smooth
+- Font smoothing para Poppins
 
 ---
 
@@ -345,4 +567,4 @@ git log --oneline
 
 ---
 
-**Última actualización:** 2026-01-13
+**Última actualización:** 2026-01-14

@@ -7,26 +7,25 @@
 
 get_header(); ?>
 
-<main id="main" class="site-main">
-    <div class="container">
-        <header class="page-header">
-            <h1 class="page-title">Blog - Viaje a Guatemala</h1>
+<main id="main" class="site-main blog-archive">
+    <header class="page-header">
+        <h1 class="page-title">Blog - Viaje a Guatemala</h1>
+        <?php
+        $archive_description = get_the_archive_description();
+        if ( $archive_description ) :
+            ?>
+            <div class="archive-description"><?php echo wp_kses_post( wpautop( $archive_description ) ); ?></div>
+        <?php endif; ?>
+    </header>
+
+    <?php if ( have_posts() ) : ?>
+
+        <div class="blog-posts">
             <?php
-            $archive_description = get_the_archive_description();
-            if ( $archive_description ) :
+            while ( have_posts() ) :
+                the_post();
                 ?>
-                <div class="archive-description"><?php echo wp_kses_post( wpautop( $archive_description ) ); ?></div>
-            <?php endif; ?>
-        </header>
-
-        <?php if ( have_posts() ) : ?>
-
-            <div class="blog-posts">
-                <?php
-                while ( have_posts() ) :
-                    the_post();
-                    ?>
-                    <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                <article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-post-card' ); ?>>
                         <header class="entry-header">
                             <?php
                             if ( has_post_thumbnail() ) :
@@ -84,7 +83,6 @@ get_header(); ?>
             </div>
 
         <?php endif; ?>
-    </div>
 </main>
 
 <?php

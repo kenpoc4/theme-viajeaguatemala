@@ -1,0 +1,608 @@
+/**
+ * Estilos para Blog Archive
+ *
+ * Layout lateral 40/60 con header sticky
+ *
+ * @package Viaje a Guatemala
+ */
+
+/* ==========================================
+   Layout Principal - 40/60
+   ========================================== */
+
+.site-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Header Lateral - 40% - Estilo Spotify */
+.site-header--lateral {
+    width: 40%;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--color-background-alt);
+    padding: var(--spacing-xl);
+    position: relative;
+}
+
+/* Background Image con Overlay - Estilo Spotify */
+.site-header--lateral.has-hero-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.4) 40%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+}
+
+.site-header__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    position: relative;
+    z-index: 2;
+    height: 100vh;
+    justify-content: space-between;
+}
+
+/* Contenido Principal - 60% - Estilo Spotify */
+.site-content {
+    width: 60%;
+    padding: var(--spacing-xl);
+    background-color: var(--color-background);
+}
+
+/* ==========================================
+   Hero Image del Header (como background)
+   ========================================== */
+
+.site-header__hero {
+    display: none;
+}
+
+/* ==========================================
+   Branding del Header - Estilo Spotify
+   ========================================== */
+
+.site-header__branding {
+    text-align: left;
+    flex-shrink: 0;
+}
+
+.site-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    margin: 0;
+    margin-bottom: var(--spacing-md);
+    letter-spacing: -0.02em;
+}
+
+.site-title a {
+    color: var(--color-text);
+    transition: all var(--transition-base);
+    display: inline-block;
+}
+
+.site-title a:hover {
+    color: var(--color-contrast);
+    transform: translateY(-2px);
+}
+
+.site-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-light);
+    margin: 0;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* Estilos cuando tiene imagen hero */
+.has-hero-image .site-title a {
+    color: var(--color-white);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.has-hero-image .site-title a:hover {
+    color: var(--color-primary);
+}
+
+.has-hero-image .site-description {
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================
+   Navegación del Header - Estilo Spotify
+   ========================================== */
+
+.site-header__navigation {
+    margin-top: 0;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.site-header__navigation::-webkit-scrollbar {
+    width: 6px;
+}
+
+.site-header__navigation::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.site-header__navigation::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.has-hero-image .site-header__navigation::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.primary-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.primary-menu li {
+    margin: 0;
+}
+
+.primary-menu a {
+    display: block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    transition: all var(--transition-base);
+    border-radius: var(--radius-md);
+    position: relative;
+}
+
+.primary-menu a:hover {
+    color: var(--color-contrast);
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateX(4px);
+}
+
+.primary-menu .current-menu-item a {
+    color: var(--color-contrast);
+    background-color: rgba(65, 0, 244, 0.1);
+    font-weight: 700;
+}
+
+.primary-menu a:focus-visible {
+    outline: 3px solid var(--color-contrast);
+    outline-offset: 2px;
+}
+
+/* Menu con imagen hero */
+.has-hero-image .primary-menu a {
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.has-hero-image .primary-menu a:hover {
+    color: var(--color-white);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.has-hero-image .primary-menu .current-menu-item a {
+    color: var(--color-primary);
+    background-color: rgba(30, 215, 96, 0.15);
+}
+
+/* ==========================================
+   Información Adicional del Header
+   ========================================== */
+
+.site-header__info {
+    flex-shrink: 0;
+    padding-top: var(--spacing-lg);
+    border-top: 2px solid var(--color-border);
+    color: var(--color-text-light);
+}
+
+/* Info con imagen hero */
+.has-hero-image .site-header__info {
+    border-top-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================
+   Blog Archive - Contenido
+   ========================================== */
+
+.blog-archive {
+    max-width: 100%;
+}
+
+.page-header {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.page-title {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.archive-description {
+    color: var(--color-text-light);
+    font-size: var(--font-size-lg);
+    line-height: 1.7;
+}
+
+/* ==========================================
+   Blog Posts Cards - Estilo Spotify
+   ========================================== */
+
+.blog-posts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+.blog-post-card {
+    background-color: var(--color-white);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-lg);
+    padding: 0;
+    transition: all var(--transition-base);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.blog-post-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+.blog-post-card:focus-within {
+    outline: 3px solid var(--color-contrast);
+    outline-offset: 4px;
+}
+
+/* ==========================================
+   Post Thumbnail - Estilo Spotify
+   ========================================== */
+
+.post-thumbnail {
+    margin: 0;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background-color: var(--color-background-alt);
+}
+
+.post-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: all var(--transition-slow);
+}
+
+.blog-post-card:hover .post-thumbnail img {
+    transform: scale(1.08);
+    filter: brightness(1.1);
+}
+
+/* ==========================================
+   Entry Header - Estilo Spotify
+   ========================================== */
+
+.entry-header {
+    padding: var(--spacing-lg);
+}
+
+.entry-title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+.entry-title a {
+    color: var(--color-text);
+    transition: all var(--transition-base);
+    display: inline-block;
+}
+
+.entry-title a:hover {
+    color: var(--color-contrast);
+    transform: translateX(4px);
+}
+
+.entry-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.entry-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ==========================================
+   Entry Summary - Estilo Spotify
+   ========================================== */
+
+.entry-summary {
+    padding: 0 var(--spacing-lg);
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.7;
+    font-size: var(--font-size-base);
+}
+
+/* ==========================================
+   Entry Footer - Estilo Spotify
+   ========================================== */
+
+.entry-footer {
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+}
+
+.read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background-color: var(--color-primary);
+    color: var(--color-black);
+    font-weight: 700;
+    font-size: var(--font-size-base);
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-base);
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.read-more::after {
+    content: '→';
+    font-size: 1.2em;
+    transition: transform var(--transition-base);
+}
+
+.read-more:hover {
+    background-color: var(--color-primary);
+    transform: scale(1.04);
+    box-shadow: var(--shadow-md);
+}
+
+.read-more:hover::after {
+    transform: translateX(4px);
+}
+
+.read-more:active {
+    transform: scale(0.98);
+}
+
+/* ==========================================
+   No Results - Estilo Spotify
+   ========================================== */
+
+.no-results {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    background-color: transparent;
+    border: 2px dashed rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-xl) 0;
+}
+
+.no-results h2 {
+    color: var(--color-text);
+    margin-bottom: var(--spacing-md);
+    font-weight: 700;
+    font-size: var(--font-size-2xl);
+}
+
+.no-results p {
+    color: var(--color-text-light);
+    font-size: var(--font-size-lg);
+    line-height: 1.6;
+}
+
+/* ==========================================
+   Paginación - Estilo Spotify
+   ========================================== */
+
+.pagination {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.page-numbers {
+    min-width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--spacing-sm);
+    background-color: transparent;
+    color: var(--color-text);
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-base);
+    font-weight: 600;
+    border: 2px solid transparent;
+}
+
+.page-numbers:hover {
+    background-color: var(--color-background-alt);
+    transform: scale(1.1);
+}
+
+.page-numbers.current {
+    background-color: var(--color-contrast);
+    color: var(--color-white);
+    border-color: var(--color-contrast);
+}
+
+.page-numbers.dots {
+    cursor: default;
+}
+
+.page-numbers.dots:hover {
+    transform: none;
+    background-color: transparent;
+}
+
+/* ==========================================
+   Responsive - Mobile
+   ========================================== */
+
+@media (max-width: 768px) {
+    .site-wrapper {
+        flex-direction: column;
+    }
+
+    .site-header--lateral {
+        width: 100%;
+        position: relative;
+        height: auto;
+        padding: var(--spacing-lg);
+    }
+
+    .site-header--lateral.has-hero-image {
+        min-height: 60vh;
+    }
+
+    .site-header--lateral.has-hero-image::before {
+        background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.6) 0%,
+            rgba(0, 0, 0, 0.7) 100%
+        );
+    }
+
+    .site-header__inner {
+        gap: var(--spacing-lg);
+        height: auto;
+        justify-content: flex-start;
+    }
+
+    .site-header__navigation {
+        overflow: visible;
+    }
+
+    .site-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .site-description {
+        font-size: var(--font-size-base);
+    }
+
+    .primary-menu a {
+        font-size: var(--font-size-base);
+        padding: var(--spacing-sm);
+    }
+
+    .site-content {
+        width: 100%;
+        padding: var(--spacing-lg);
+    }
+
+    .page-header {
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
+    }
+
+    .page-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .blog-posts {
+        gap: var(--spacing-lg);
+    }
+
+    .entry-header {
+        padding: var(--spacing-md);
+    }
+
+    .entry-title {
+        font-size: var(--font-size-lg);
+    }
+
+    .entry-summary {
+        padding: 0 var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .entry-footer {
+        padding: 0 var(--spacing-md) var(--spacing-md);
+    }
+
+    .read-more {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .entry-meta {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+}
+
+/* ==========================================
+   Responsive - Tablet
+   ========================================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .site-header--lateral {
+        width: 35%;
+        padding: var(--spacing-lg);
+    }
+
+    .site-header__inner {
+        gap: var(--spacing-lg);
+    }
+
+    .site-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .site-content {
+        width: 65%;
+        padding: var(--spacing-lg);
+    }
+
+    .blog-posts {
+        gap: var(--spacing-lg);
+    }
+}

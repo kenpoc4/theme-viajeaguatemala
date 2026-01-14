@@ -26,6 +26,37 @@ require_once VGUATE_THEME_DIR . '/inc/post-types.php';
 require_once VGUATE_THEME_DIR . '/inc/enqueue-scripts.php';
 
 /**
+ * Include theme options
+ */
+require_once VGUATE_THEME_DIR . '/inc/theme-options.php';
+
+/**
+ * Theme Setup
+ */
+function vguate_theme_setup() {
+    // Soporte para imágenes destacadas
+    add_theme_support( 'post-thumbnails' );
+
+    // Soporte para títulos dinámicos
+    add_theme_support( 'title-tag' );
+
+    // Soporte para HTML5
+    add_theme_support( 'html5', array(
+        'search-form',
+        'comment-form',
+        'comment-list',
+        'gallery',
+        'caption',
+    ) );
+
+    // Registrar menús de navegación
+    register_nav_menus( array(
+        'primary' => __( 'Menú Principal', 'vguate' ),
+    ) );
+}
+add_action( 'after_setup_theme', 'vguate_theme_setup' );
+
+/**
  * Redirect home to blog archive
  */
 function vguate_redirect_home_to_blog() {
