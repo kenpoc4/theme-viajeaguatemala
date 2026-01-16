@@ -89,6 +89,15 @@ function vguate_register_theme_settings() {
         'vguate_header_section'                         // Sección
     );
 
+    // Campo: Descripción del Blog
+    add_settings_field(
+        'vguate_blog_description',                      // ID
+        __( 'Descripción del Blog', 'vguate' ),         // Título
+        'vguate_blog_description_callback',             // Callback
+        'vguate-theme-options-blog',                    // Página (pestaña blog)
+        'vguate_header_section'                         // Sección
+    );
+
     // Sección: Logos
     add_settings_section(
         'vguate_logos_section',                         // ID
@@ -141,6 +150,26 @@ function vguate_header_section_callback() {
  */
 function vguate_logos_section_callback() {
     echo '<p>' . __( 'Configura las diferentes versiones del logo para el blog.', 'vguate' ) . '</p>';
+}
+
+/**
+ * Callback del campo descripción del blog
+ */
+function vguate_blog_description_callback() {
+    $options = get_option( 'vguate_theme_options' );
+    $description = isset( $options['blog_description'] ) ? $options['blog_description'] : '';
+    ?>
+    <textarea
+        id="vguate_blog_description"
+        name="vguate_theme_options[blog_description]"
+        rows="4"
+        class="large-text"
+        placeholder="<?php esc_attr_e( 'Escribe una breve descripción del blog...', 'vguate' ); ?>"
+    ><?php echo esc_textarea( $description ); ?></textarea>
+    <p class="description">
+        <?php _e( 'Esta descripción se mostrará en el header lateral del blog.', 'vguate' ); ?>
+    </p>
+    <?php
 }
 
 /**
@@ -300,6 +329,11 @@ function vguate_sanitize_theme_options( $input ) {
         }
     }
 
+    // Sanitizar descripción del blog
+    if ( isset( $input['blog_description'] ) ) {
+        $sanitized['blog_description'] = sanitize_textarea_field( $input['blog_description'] );
+    }
+
     return $sanitized;
 }
 
@@ -374,6 +408,14 @@ function vguate_get_hero_image() {
     }
 
     return false;
+}
+
+/**
+ * Función helper para obtener la descripción del blog
+ */
+function vguate_get_blog_description() {
+    $options = get_option( 'vguate_theme_options' );
+    return isset( $options['blog_description'] ) ? $options['blog_description'] : '';
 }
 
 /**

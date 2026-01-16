@@ -25,24 +25,38 @@
             <!-- Logo/Título del sitio -->
             <div class="site-header__branding">
                 <?php if ( is_post_type_archive( 'blog' ) || is_singular( 'blog' ) ) : ?>
-                    <h1 class="site-title site-title--blog">
-                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>">
-                            <span class="site-title__main">Blog</span>
-                            <span class="site-title__sub">viaje a Guatemala</span>
+                    <?php
+                    // Determinar qué logo usar según si hay imagen hero
+                    $logo_type = $hero_image ? 'logo_white' : 'logo';
+                    $logo_img = vguate_get_logo_img( $logo_type );
+                    $blog_description = vguate_get_blog_description();
+                    ?>
+                    <?php if ( $logo_img ) : ?>
+                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-logo-link">
+                            <?php echo $logo_img; ?>
                         </a>
-                    </h1>
+                    <?php else : ?>
+                        <h1 class="site-title">
+                            <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>">
+                                <?php bloginfo( 'name' ); ?>
+                            </a>
+                        </h1>
+                    <?php endif; ?>
+                    <?php if ( $blog_description ) : ?>
+                        <p class="site-description site-description--blog"><?php echo esc_html( $blog_description ); ?></p>
+                    <?php endif; ?>
                 <?php else : ?>
                     <h1 class="site-title">
                         <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
                             <?php bloginfo( 'name' ); ?>
                         </a>
                     </h1>
-                <?php endif; ?>
-                <?php
-                $description = get_bloginfo( 'description', 'display' );
-                if ( $description || is_customize_preview() ) :
-                    ?>
-                    <p class="site-description"><?php echo $description; ?></p>
+                    <?php
+                    $description = get_bloginfo( 'description', 'display' );
+                    if ( $description || is_customize_preview() ) :
+                        ?>
+                        <p class="site-description"><?php echo $description; ?></p>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
 
