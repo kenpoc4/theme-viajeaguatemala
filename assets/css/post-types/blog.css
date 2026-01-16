@@ -18,13 +18,13 @@
 /* Header Lateral - 40% - Estilo Spotify */
 .site-header--lateral {
     width: 40%;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
     height: 100vh;
     overflow: hidden;
     background-color: var(--color-background-alt);
     padding: var(--spacing-xl);
-    position: relative;
 }
 
 /* Background Image con Overlay - Estilo Spotify */
@@ -58,8 +58,10 @@
 /* Contenido Principal - 60% - Estilo Spotify */
 .site-content {
     width: 60%;
+    margin-left: 40%;
     padding: var(--spacing-xl);
     background-color: var(--color-background);
+    min-height: 100vh;
 }
 
 /* ==========================================
@@ -104,6 +106,79 @@
     margin: 0;
     line-height: 1.6;
     font-weight: 400;
+}
+
+/* ==========================================
+   Título Blog - Estilo Destacado
+   ========================================== */
+
+.site-title--blog a {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    text-decoration: none;
+}
+
+.site-title__main {
+    display: block;
+    font-size: clamp(3.5rem, 8vw, 5rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-contrast) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all var(--transition-base);
+}
+
+.site-title__sub {
+    display: block;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--color-text);
+    opacity: 0.85;
+    margin-top: var(--spacing-xs);
+    transition: all var(--transition-base);
+}
+
+/* Hover effect */
+.site-title--blog a:hover .site-title__main {
+    background: linear-gradient(135deg, var(--color-contrast) 0%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    transform: translateX(4px);
+}
+
+.site-title--blog a:hover .site-title__sub {
+    color: var(--color-contrast);
+    opacity: 1;
+    transform: translateX(8px);
+}
+
+/* Con imagen hero */
+.has-hero-image .site-title__main {
+    background: linear-gradient(135deg, var(--color-white) 0%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.has-hero-image .site-title__sub {
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.has-hero-image .site-title--blog a:hover .site-title__main {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-white) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.has-hero-image .site-title--blog a:hover .site-title__sub {
+    color: var(--color-primary);
 }
 
 /* Estilos cuando tiene imagen hero */
@@ -494,6 +569,7 @@
     .site-header--lateral {
         width: 100%;
         position: relative;
+        left: auto;
         height: auto;
         padding: var(--spacing-lg);
     }
@@ -524,6 +600,14 @@
         font-size: var(--font-size-2xl);
     }
 
+    .site-title__main {
+        font-size: clamp(2.5rem, 12vw, 3.5rem);
+    }
+
+    .site-title__sub {
+        font-size: clamp(1rem, 4vw, 1.25rem);
+    }
+
     .site-description {
         font-size: var(--font-size-base);
     }
@@ -535,6 +619,7 @@
 
     .site-content {
         width: 100%;
+        margin-left: 0;
         padding: var(--spacing-lg);
     }
 
@@ -597,8 +682,17 @@
         font-size: var(--font-size-2xl);
     }
 
+    .site-title__main {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+    }
+
+    .site-title__sub {
+        font-size: clamp(1rem, 2vw, 1.5rem);
+    }
+
     .site-content {
         width: 65%;
+        margin-left: 35%;
         padding: var(--spacing-lg);
     }
 

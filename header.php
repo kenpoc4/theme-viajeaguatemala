@@ -24,11 +24,20 @@
         <div class="site-header__inner">
             <!-- Logo/Título del sitio -->
             <div class="site-header__branding">
-                <h1 class="site-title">
-                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-                        <?php bloginfo( 'name' ); ?>
-                    </a>
-                </h1>
+                <?php if ( is_post_type_archive( 'blog' ) || is_singular( 'blog' ) ) : ?>
+                    <h1 class="site-title site-title--blog">
+                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>">
+                            <span class="site-title__main">Blog</span>
+                            <span class="site-title__sub">viaje a Guatemala</span>
+                        </a>
+                    </h1>
+                <?php else : ?>
+                    <h1 class="site-title">
+                        <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+                            <?php bloginfo( 'name' ); ?>
+                        </a>
+                    </h1>
+                <?php endif; ?>
                 <?php
                 $description = get_bloginfo( 'description', 'display' );
                 if ( $description || is_customize_preview() ) :
