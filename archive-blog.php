@@ -8,60 +8,59 @@
 get_header(); ?>
 
 <main id="main" class="site-main blog-archive">
-    <header class="page-header">
-        <h1 class="page-title">Blog - Viaje a Guatemala</h1>
-        <?php
-        $archive_description = get_the_archive_description();
-        if ( $archive_description ) :
-            ?>
-            <div class="archive-description"><?php echo wp_kses_post( wpautop( $archive_description ) ); ?></div>
-        <?php endif; ?>
-    </header>
+    <!-- Tabs de navegación -->
+    <nav class="blog-tabs">
+        <button class="blog-tab blog-tab--active" data-tab="posts">
+            Posts recientes
+        </button>
+        <button class="blog-tab" data-tab="categorias">
+            Categorías
+        </button>
+    </nav>
 
-    <?php if ( have_posts() ) : ?>
+    <!-- Tab: Posts recientes -->
+    <div class="blog-tab-content blog-tab-content--active" data-tab-content="posts">
+        <?php if ( have_posts() ) : ?>
 
-        <div class="blog-posts">
-            <?php
-            while ( have_posts() ) :
-                the_post();
-                ?>
-                <article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-post-card' ); ?>>
-                        <header class="entry-header">
-                            <?php
-                            if ( has_post_thumbnail() ) :
-                                ?>
-                                <div class="post-thumbnail">
-                                    <a href="<?php the_permalink(); ?>">
-                                        <?php the_post_thumbnail( 'large' ); ?>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
+            <div class="blog-posts">
+                <?php
+                while ( have_posts() ) :
+                    the_post();
+                    ?>
+                    <article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-post-card' ); ?>>
+                        <!-- SVG para efecto de borde -->
+                        <svg class="card-border-svg" preserveAspectRatio="none">
+                            <rect class="card-border-rect" x="1" y="1" rx="12" ry="12" />
+                        </svg>
 
+                        <?php if ( has_post_thumbnail() ) : ?>
+                            <a href="<?php the_permalink(); ?>" class="post-thumbnail">
+                                <?php the_post_thumbnail( 'medium_large' ); ?>
+                            </a>
+                        <?php endif; ?>
+
+                        <div class="entry-content">
                             <h2 class="entry-title">
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                             </h2>
 
-                            <div class="entry-meta">
-                                <span class="posted-on">
-                                    <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
-                                        <?php echo esc_html( get_the_date() ); ?>
-                                    </time>
+                            <?php
+                            $descripcion = vguate_get_blog_post_description();
+                            if ( ! $descripcion ) {
+                                $descripcion = wp_trim_words( get_the_excerpt(), 15 );
+                            }
+                            ?>
+                            <p class="entry-excerpt"><?php echo esc_html( $descripcion ); ?></p>
+
+                            <div class="entry-footer">
+                                <span class="entry-date">
+                                    <?php echo esc_html( get_the_date( 'M d, Y' ) ); ?>
                                 </span>
-                                <span class="byline">
-                                    por <?php the_author(); ?>
-                                </span>
+                                <a href="<?php the_permalink(); ?>" class="read-more">
+                                    Leer más →
+                                </a>
                             </div>
-                        </header>
-
-                        <div class="entry-summary">
-                            <?php the_excerpt(); ?>
                         </div>
-
-                        <footer class="entry-footer">
-                            <a href="<?php the_permalink(); ?>" class="read-more">
-                                Leer más
-                            </a>
-                        </footer>
                     </article>
                 <?php endwhile; ?>
             </div>
@@ -83,7 +82,93 @@ get_header(); ?>
             </div>
 
         <?php endif; ?>
+    </div>
+
+    <!-- Tab: Categorías -->
+    <div class="blog-tab-content" data-tab-content="categorias">
+        <?php
+        $categories = get_terms( array(
+            'taxonomy'   => 'category',
+            'hide_empty' => true,
+        ) );
+
+        if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) :
+        ?>
+            <div class="blog-categories">
+                <?php foreach ( $categories as $category ) : ?>
+                    <a href="<?php echo esc_url( get_term_link( $category ) ); ?>" class="category-card">
+                        <span class="category-card__name"><?php echo esc_html( $category->name ); ?></span>
+                        <span class="category-card__count"><?php echo esc_html( $category->count ); ?> posts</span>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        <?php else : ?>
+            <div class="no-results">
+                <h2>No hay categorías</h2>
+                <p>No se han creado categorías todavía.</p>
+            </div>
+        <?php endif; ?>
+    </div>
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tabs functionality
+    const tabs = document.querySelectorAll('.blog-tab');
+    const contents = document.querySelectorAll('.blog-tab-content');
+
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+
+            tabs.forEach(function(t) {
+                t.classList.remove('blog-tab--active');
+            });
+            contents.forEach(function(c) {
+                c.classList.remove('blog-tab-content--active');
+            });
+
+            this.classList.add('blog-tab--active');
+            document.querySelector('[data-tab-content="' + targetTab + '"]').classList.add('blog-tab-content--active');
+        });
+    });
+
+    // SVG Border Animation
+    function initCardBorders() {
+        const cards = document.querySelectorAll('.blog-post-card');
+
+        cards.forEach(function(card) {
+            const rect = card.querySelector('.card-border-rect');
+            if (!rect) return;
+
+            const width = card.offsetWidth;
+            const height = card.offsetHeight;
+            const rx = 12; // border-radius
+
+            // Calcular perímetro aproximado del rectángulo redondeado
+            const perimeter = 2 * (width + height) - 8 * rx + 2 * Math.PI * rx;
+
+            rect.style.strokeDasharray = perimeter;
+            rect.style.strokeDashoffset = '0'; // Borde visible por defecto
+            card.style.setProperty('--perimeter', perimeter);
+        });
+    }
+
+    initCardBorders();
+    window.addEventListener('resize', initCardBorders);
+
+    // Card clickeable
+    const cards = document.querySelectorAll('.blog-post-card');
+    cards.forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            const link = card.querySelector('.entry-title a');
+            if (link && !e.target.closest('a')) {
+                window.location.href = link.href;
+            }
+        });
+    });
+});
+</script>
 
 <?php
 get_footer();

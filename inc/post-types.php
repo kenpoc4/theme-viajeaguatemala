@@ -104,3 +104,96 @@ function vguate_register_custom_post_types() {
     ) );
 }
 add_action( 'init', 'vguate_register_custom_post_types' );
+
+/**
+ * ==========================================
+ * Custom Fields para Blog
+ * ==========================================
+ */
+
+/**
+ * Registrar Meta Box para el post type Blog
+ */
+function vguate_blog_register_meta_boxes() {
+    add_meta_box(
+        'vguate_blog_description',
+        __( 'Descripción', 'vguate' ),
+        'vguate_blog_description_meta_box_callback',
+        'blog',
+        'normal',
+        'high'
+    );
+}
+add_action( 'add_meta_boxes', 'vguate_blog_register_meta_boxes' );
+
+/**
+ * Callback para renderizar el meta box de descripción
+ */
+function vguate_blog_description_meta_box_callback( $post ) {
+    // Agregar nonce para seguridad
+    wp_nonce_field( 'vguate_blog_description_nonce', 'vguate_blog_description_nonce' );
+
+    // Obtener valor guardado
+    $description = get_post_meta( $post->ID, '_vguate_blog_description', true );
+    ?>
+    <p>
+        <label for="vguate_blog_description" style="display: block; margin-bottom: 8px; font-weight: 600;">
+            <?php _e( 'Descripción personalizada para esta entrada:', 'vguate' ); ?>
+        </label>
+        <textarea
+            id="vguate_blog_description"
+            name="vguate_blog_description"
+            rows="4"
+            style="width: 100%;"
+            placeholder="<?php esc_attr_e( 'Escribe una descripción breve para esta entrada...', 'vguate' ); ?>"
+        ><?php echo esc_textarea( $description ); ?></textarea>
+    </p>
+    <p class="description">
+        <?php _e( 'Esta descripción se puede usar en lugar del extracto automático.', 'vguate' ); ?>
+    </p>
+    <?php
+}
+
+/**
+ * Guardar el meta box de descripción
+ */
+function vguate_blog_save_description_meta_box( $post_id ) {
+    // Verificar nonce
+    if ( ! isset( $_POST['vguate_blog_description_nonce'] ) ||
+         ! wp_verify_nonce( $_POST['vguate_blog_description_nonce'], 'vguate_blog_description_nonce' ) ) {
+        return;
+    }
+
+    // Verificar autoguardado
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+
+    // Verificar permisos
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    // Guardar o eliminar el valor
+    if ( isset( $_POST['vguate_blog_description'] ) ) {
+        $description = sanitize_textarea_field( $_POST['vguate_blog_description'] );
+        update_post_meta( $post_id, '_vguate_blog_description', $description );
+    }
+}
+add_action( 'save_post_blog', 'vguate_blog_save_description_meta_box' );
+
+/**
+ * Helper function para obtener la descripción del blog post
+ *
+ * @param int $post_id ID del post (opcional, usa el actual si no se especifica)
+ * @return string Descripción del post o string vacío
+ */
+function vguate_get_blog_post_description( $post_id = null ) {
+    if ( null === $post_id ) {
+        $post_id = get_the_ID();
+    }
+
+    $description = get_post_meta( $post_id, '_vguate_blog_description', true );
+
+    return $description ? $description : '';
+}

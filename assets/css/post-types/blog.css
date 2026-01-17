@@ -59,7 +59,7 @@
 .site-content {
     width: 60%;
     margin-left: 40%;
-    padding: var(--spacing-xl);
+    padding: var(--spacing-xl) 5rem;
     background-color: var(--color-background);
     min-height: 100vh;
 }
@@ -375,24 +375,126 @@
     max-width: 100%;
 }
 
-.page-header {
+/* ==========================================
+   Blog Tabs - Estilo Spotify
+   ========================================== */
+
+.blog-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
     margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-lg);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: var(--spacing-sm);
+    width: 100%;
 }
 
-.page-title {
-    font-size: var(--font-size-3xl);
-    margin-bottom: var(--spacing-md);
-    color: var(--color-text);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-}
-
-.archive-description {
+.blog-tab {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    font-weight: 600;
     color: var(--color-text-light);
-    font-size: var(--font-size-lg);
-    line-height: 1.7;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+    text-align: center;
+}
+
+.blog-tab:hover {
+    color: var(--color-text);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.blog-tab--active {
+    color: var(--color-text);
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.blog-tab--active::after {
+    content: '';
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background-color: var(--color-primary);
+    border-radius: 2px;
+}
+
+.blog-tab:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Tab Content */
+.blog-tab-content {
+    display: none;
+}
+
+.blog-tab-content--active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   Blog Categories Grid
+   ========================================== */
+
+.blog-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-lg);
+    background-color: var(--color-white);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary);
+}
+
+.category-card__name {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-text);
+    transition: color var(--transition-base);
+}
+
+.category-card:hover .category-card__name {
+    color: var(--color-primary);
+}
+
+.category-card__count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
 }
 
 /* ==========================================
@@ -402,38 +504,73 @@
 .blog-posts {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xl);
+    gap: var(--spacing-lg);
 }
 
 .blog-post-card {
     background-color: var(--color-white);
-    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: var(--radius-lg);
-    padding: 0;
-    transition: all var(--transition-base);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-sm);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background-color 0.8s ease;
+    cursor: pointer;
 }
 
 .blog-post-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px) scale(1.01);
-    border-color: rgba(0, 0, 0, 0.12);
+    background-color: rgba(65, 0, 244, 0.03);
 }
 
-.blog-post-card:focus-within {
-    outline: 3px solid var(--color-contrast);
-    outline-offset: 4px;
+/* SVG Border Animation */
+.card-border-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.card-border-rect {
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    fill: none;
+    stroke: var(--color-border);
+    stroke-width: 2;
+}
+
+/* Estado inicial: borde gris visible */
+.blog-post-card .card-border-rect {
+    stroke-dashoffset: 0;
+}
+
+/* Hover: borde morado con animación de dibujo */
+.blog-post-card:hover .card-border-rect {
+    stroke: var(--color-contrast);
+    animation: draw-border 0.8s ease forwards;
+}
+
+@keyframes draw-border {
+    0% {
+        stroke-dashoffset: var(--perimeter);
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
 }
 
 /* ==========================================
-   Post Thumbnail - Estilo Spotify
+   Post Thumbnail - Estilo Compacto
    ========================================== */
 
 .post-thumbnail {
+    display: block;
     margin: 0;
     overflow: hidden;
-    aspect-ratio: 16/9;
+    aspect-ratio: 16/10;
+    border-radius: var(--radius-md);
     background-color: var(--color-background-alt);
 }
 
@@ -442,25 +579,28 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: all var(--transition-slow);
+    transition: all var(--transition-base);
 }
 
 .blog-post-card:hover .post-thumbnail img {
-    transform: scale(1.08);
-    filter: brightness(1.1);
+    transform: scale(1.05);
 }
 
 /* ==========================================
-   Entry Header - Estilo Spotify
+   Entry Content - Card Body
    ========================================== */
 
-.entry-header {
-    padding: var(--spacing-lg);
+.entry-content {
+    padding: var(--spacing-sm) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    flex: 1;
 }
 
 .entry-title {
     font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-md);
+    margin: 0;
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1.3;
@@ -469,83 +609,47 @@
 .entry-title a {
     color: var(--color-text);
     transition: all var(--transition-base);
-    display: inline-block;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .entry-title a:hover {
     color: var(--color-contrast);
-    transform: translateX(4px);
 }
 
-.entry-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    margin-bottom: 0;
-    font-weight: 500;
-}
-
-.entry-meta span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-/* ==========================================
-   Entry Summary - Estilo Spotify
-   ========================================== */
-
-.entry-summary {
-    padding: 0 var(--spacing-lg);
+.entry-excerpt {
+    font-size: 0.8rem;
     color: var(--color-text-light);
-    margin-bottom: var(--spacing-lg);
-    line-height: 1.7;
-    font-size: var(--font-size-base);
+    line-height: 1.5;
+    margin: 0;
+    flex: 1;
 }
-
-/* ==========================================
-   Entry Footer - Estilo Spotify
-   ========================================== */
 
 .entry-footer {
-    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.entry-date {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
 }
 
 .read-more {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 32px;
-    background-color: var(--color-primary);
-    color: var(--color-black);
-    font-weight: 700;
-    font-size: var(--font-size-base);
-    border-radius: var(--radius-xl);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-contrast);
     transition: all var(--transition-base);
-    text-transform: none;
-    letter-spacing: normal;
-}
-
-.read-more::after {
-    content: '→';
-    font-size: 1.2em;
-    transition: transform var(--transition-base);
 }
 
 .read-more:hover {
-    background-color: var(--color-primary);
-    transform: scale(1.04);
-    box-shadow: var(--shadow-md);
-}
-
-.read-more:hover::after {
     transform: translateX(4px);
-}
-
-.read-more:active {
-    transform: scale(0.98);
 }
 
 /* ==========================================
