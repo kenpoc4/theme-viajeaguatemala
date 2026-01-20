@@ -57,23 +57,7 @@
                         </h1>
                     <?php endif; ?>
 
-                    <?php if ( $is_single_post ) : ?>
-                        <!-- En single: mostrar subtítulo del post -->
-                        <?php
-                        $subtitle = vguate_get_blog_post_subtitle();
-                        if ( $subtitle ) :
-                        ?>
-                            <p class="site-header__post-subtitle"><?php echo esc_html( $subtitle ); ?></p>
-                        <?php endif; ?>
-                        <!-- Botón de regresar -->
-                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-header__back-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="19" y1="12" x2="5" y2="12"></line>
-                                <polyline points="12 19 5 12 12 5"></polyline>
-                            </svg>
-                            <span>Volver al blog</span>
-                        </a>
-                    <?php else :
+                    <?php if ( ! $is_single_post ) :
                         // En archivo: mostrar descripción del blog
                         $blog_description = vguate_get_blog_description();
                         if ( $blog_description ) : ?>
@@ -94,6 +78,16 @@
                 <?php endif; ?>
             </div>
 
+            <?php if ( is_singular( 'blog' ) ) : ?>
+                <!-- Subtítulo del post centrado -->
+                <?php
+                $subtitle = vguate_get_blog_post_subtitle();
+                if ( $subtitle ) :
+                ?>
+                    <p class="site-header__post-subtitle"><?php echo esc_html( $subtitle ); ?></p>
+                <?php endif; ?>
+            <?php endif; ?>
+
             <!-- Navegación Principal -->
             <nav class="site-header__navigation">
                 <?php
@@ -106,6 +100,21 @@
                 ?>
             </nav>
 
+            <!-- Información adicional o widgets del header -->
+            <div class="site-header__info">
+                <?php if ( is_singular( 'blog' ) ) : ?>
+                    <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-header__back-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        <span>Volver al blog</span>
+                    </a>
+                <?php else : ?>
+                    <p>Descubre Guatemala</p>
+                <?php endif; ?>
+            </div>
+
             <!-- Línea decorativa con icono animado -->
             <div class="site-header__divider">
                 <span class="site-header__divider-icon">
@@ -113,11 +122,6 @@
                         <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
                     </svg>
                 </span>
-            </div>
-
-            <!-- Información adicional o widgets del header -->
-            <div class="site-header__info">
-                <p>Descubre Guatemala</p>
             </div>
         </div>
     </header>

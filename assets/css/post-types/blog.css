@@ -22,7 +22,7 @@
     top: 0;
     left: 0;
     height: 100vh;
-    overflow: hidden;
+    overflow: visible;
     background-color: var(--color-background-alt);
     padding: var(--spacing-lg) var(--spacing-md);
 }
@@ -48,11 +48,11 @@
 .site-header__inner {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
     position: relative;
     z-index: 2;
-    height: 100vh;
-    justify-content: space-between;
+    height: calc(100vh - var(--spacing-lg) * 2);
+    justify-content: flex-start;
 }
 
 /* Contenido Principal - 60% - Estilo Spotify */
@@ -356,9 +356,10 @@
 
 .site-header__info {
     flex-shrink: 0;
-    padding-top: var(--spacing-md);
     color: var(--color-text-light);
-    text-align: center;
+    text-align: left;
+    position: relative;
+    z-index: 10;
 }
 
 /* Info con imagen hero */
@@ -884,15 +885,22 @@
     max-height: 80px;
 }
 
-/* Subtítulo del post en el header lateral */
+/* Subtítulo del post en el header lateral - centrado verticalmente */
 .site-header__post-subtitle {
-    font-size: 1rem;
-    font-weight: 500;
-    margin: var(--spacing-md) 0 0 0;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
     text-align: center;
     line-height: 1.5;
-    max-width: 340px;
+    width: 100%;
+    padding: 0 var(--spacing-md);
     color: var(--color-text-light);
+    z-index: 5;
 }
 
 .has-hero-image .site-header__post-subtitle {
@@ -904,22 +912,25 @@
 .site-header__back-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    margin-top: var(--spacing-md);
-    padding: 10px 20px;
-    font-size: var(--font-size-sm);
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--color-text);
-    background-color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: var(--color-white);
     border-radius: var(--radius-xl);
     transition: all var(--transition-base);
-    text-decoration: none;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .site-header__back-btn:hover {
-    background-color: var(--color-white);
+    background-color: var(--color-contrast);
+    color: var(--color-white);
     transform: translateX(-4px);
-    box-shadow: var(--shadow-md);
 }
 
 .site-header__back-btn svg {
@@ -935,11 +946,13 @@
     color: var(--color-white);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: none;
 }
 
 .has-hero-image .site-header__back-btn:hover {
     background-color: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.4);
+    color: var(--color-white);
 }
 
 /* ==========================================
@@ -1386,8 +1399,7 @@
     }
 
     .site-header__back-btn {
-        padding: 8px 16px;
-        font-size: var(--font-size-xs);
+        font-size: 0.7rem;
     }
 
     /* Sticky Header Mobile */
