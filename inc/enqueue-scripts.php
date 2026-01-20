@@ -93,6 +93,23 @@ function vguate_enqueue_post_type_style( $post_type ) {
  * @param string $post_type Slug del post type
  */
 function vguate_enqueue_single_style( $post_type ) {
+    $dependencies = array( 'vguate-global' );
+
+    // Primero cargar los estilos base del post-type (compartidos con archive)
+    $post_type_path = VGUATE_THEME_DIR . '/assets/css/post-types/' . $post_type . '.css';
+    $post_type_uri = VGUATE_THEME_URI . '/assets/css/post-types/' . $post_type . '.css';
+
+    if ( file_exists( $post_type_path ) ) {
+        wp_enqueue_style(
+            'vguate-post-type-' . $post_type,
+            $post_type_uri,
+            array( 'vguate-global' ),
+            VGUATE_VERSION
+        );
+        $dependencies[] = 'vguate-post-type-' . $post_type;
+    }
+
+    // Luego cargar estilos específicos del single (si existen)
     $file_path = VGUATE_THEME_DIR . '/assets/css/singles/' . $post_type . '.css';
     $file_uri = VGUATE_THEME_URI . '/assets/css/singles/' . $post_type . '.css';
 
@@ -100,7 +117,7 @@ function vguate_enqueue_single_style( $post_type ) {
         wp_enqueue_style(
             'vguate-single-' . $post_type,
             $file_uri,
-            array( 'vguate-global' ),
+            $dependencies,
             VGUATE_VERSION
         );
     }

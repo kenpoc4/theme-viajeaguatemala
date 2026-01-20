@@ -12,9 +12,23 @@
 <div class="site-wrapper">
     <!-- Header Lateral Sticky -->
     <?php
-    $hero_image = vguate_get_hero_image();
+    // Determinar la imagen hero según el contexto
+    if ( is_singular( 'blog' ) && has_post_thumbnail() ) {
+        // En single blog, usar la imagen destacada del post
+        $hero_image = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+    } else {
+        // En archivo, usar la imagen hero de las opciones del tema
+        $hero_image = vguate_get_hero_image();
+    }
+
     $header_style = '';
     $header_class = 'site-header site-header--lateral';
+
+    // Agregar clase específica para single blog
+    if ( is_singular( 'blog' ) ) {
+        $header_class .= ' site-header--single';
+    }
+
     if ( $hero_image ) {
         $header_style = 'style="background-image: url(' . esc_url( $hero_image ) . '); background-size: cover; background-position: center; background-repeat: no-repeat;"';
         $header_class .= ' has-hero-image';
@@ -29,10 +43,10 @@
                     // Determinar qué logo usar según si hay imagen hero
                     $logo_type = $hero_image ? 'logo_white' : 'logo';
                     $logo_img = vguate_get_logo_img( $logo_type );
-                    $blog_description = vguate_get_blog_description();
+                    $is_single_post = is_singular( 'blog' );
                     ?>
                     <?php if ( $logo_img ) : ?>
-                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-logo-link">
+                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-logo-link<?php echo $is_single_post ? ' site-logo-link--small' : ''; ?>">
                             <?php echo $logo_img; ?>
                         </a>
                     <?php else : ?>
@@ -42,9 +56,24 @@
                             </a>
                         </h1>
                     <?php endif; ?>
-                    <?php if ( $blog_description ) : ?>
+
+                    <?php if ( $is_single_post ) : ?>
+                        <!-- En single: mostrar título del post -->
+                        <h1 class="site-header__post-title"><?php the_title(); ?></h1>
+                        <!-- Botón de regresar -->
+                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-header__back-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            <span>Volver al blog</span>
+                        </a>
+                    <?php else :
+                        // En archivo: mostrar descripción del blog
+                        $blog_description = vguate_get_blog_description();
+                        if ( $blog_description ) : ?>
                         <p class="site-description site-description--blog"><?php echo esc_html( $blog_description ); ?></p>
-                    <?php endif; ?>
+                    <?php endif; endif; ?>
                 <?php else : ?>
                     <h1 class="site-title">
                         <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
