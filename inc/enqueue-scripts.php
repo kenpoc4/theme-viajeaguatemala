@@ -146,6 +146,15 @@ function vguate_enqueue_page_style( $page_slug ) {
  * Registrar y encolar scripts del tema
  */
 function vguate_enqueue_scripts() {
-    // Aquí se pueden registrar scripts JavaScript en el futuro
+    // Script para Blog Single - Sticky Header
+    if ( is_singular( 'blog' ) ) {
+        wp_enqueue_script(
+            'vguate-blog-single',
+            VGUATE_THEME_URI . '/assets/js/blog-single.js',
+            array(),
+            VGUATE_VERSION,
+            true // Cargar en footer
+        );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'vguate_enqueue_scripts' );

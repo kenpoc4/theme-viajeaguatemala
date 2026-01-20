@@ -116,6 +116,15 @@ add_action( 'init', 'vguate_register_custom_post_types' );
  */
 function vguate_blog_register_meta_boxes() {
     add_meta_box(
+        'vguate_blog_subtitle',
+        __( 'Subtítulo', 'vguate' ),
+        'vguate_blog_subtitle_meta_box_callback',
+        'blog',
+        'normal',
+        'high'
+    );
+
+    add_meta_box(
         'vguate_blog_description',
         __( 'Descripción', 'vguate' ),
         'vguate_blog_description_meta_box_callback',
@@ -125,6 +134,63 @@ function vguate_blog_register_meta_boxes() {
     );
 }
 add_action( 'add_meta_boxes', 'vguate_blog_register_meta_boxes' );
+
+/**
+ * Callback para renderizar el meta box de subtítulo
+ */
+function vguate_blog_subtitle_meta_box_callback( $post ) {
+    // Agregar nonce para seguridad
+    wp_nonce_field( 'vguate_blog_subtitle_nonce', 'vguate_blog_subtitle_nonce' );
+
+    // Obtener valor guardado
+    $subtitle = get_post_meta( $post->ID, '_vguate_blog_subtitle', true );
+    ?>
+    <p>
+        <label for="vguate_blog_subtitle" style="display: block; margin-bottom: 8px; font-weight: 600;">
+            <?php _e( 'Subtítulo de la entrada:', 'vguate' ); ?>
+        </label>
+        <input
+            type="text"
+            id="vguate_blog_subtitle"
+            name="vguate_blog_subtitle"
+            value="<?php echo esc_attr( $subtitle ); ?>"
+            style="width: 100%;"
+            placeholder="<?php esc_attr_e( 'Escribe un subtítulo para esta entrada...', 'vguate' ); ?>"
+        />
+    </p>
+    <p class="description">
+        <?php _e( 'El subtítulo aparecerá debajo del título principal en la entrada.', 'vguate' ); ?>
+    </p>
+    <?php
+}
+
+/**
+ * Guardar el meta box de subtítulo
+ */
+function vguate_blog_save_subtitle_meta_box( $post_id ) {
+    // Verificar nonce
+    if ( ! isset( $_POST['vguate_blog_subtitle_nonce'] ) ||
+         ! wp_verify_nonce( $_POST['vguate_blog_subtitle_nonce'], 'vguate_blog_subtitle_nonce' ) ) {
+        return;
+    }
+
+    // Verificar autoguardado
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+
+    // Verificar permisos
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    // Guardar o eliminar el valor
+    if ( isset( $_POST['vguate_blog_subtitle'] ) ) {
+        $subtitle = sanitize_text_field( $_POST['vguate_blog_subtitle'] );
+        update_post_meta( $post_id, '_vguate_blog_subtitle', $subtitle );
+    }
+}
+add_action( 'save_post_blog', 'vguate_blog_save_subtitle_meta_box' );
 
 /**
  * Callback para renderizar el meta box de descripción
@@ -181,6 +247,22 @@ function vguate_blog_save_description_meta_box( $post_id ) {
     }
 }
 add_action( 'save_post_blog', 'vguate_blog_save_description_meta_box' );
+
+/**
+ * Helper function para obtener el subtítulo del blog post
+ *
+ * @param int $post_id ID del post (opcional, usa el actual si no se especifica)
+ * @return string Subtítulo del post o string vacío
+ */
+function vguate_get_blog_post_subtitle( $post_id = null ) {
+    if ( null === $post_id ) {
+        $post_id = get_the_ID();
+    }
+
+    $subtitle = get_post_meta( $post_id, '_vguate_blog_subtitle', true );
+
+    return $subtitle ? $subtitle : '';
+}
 
 /**
  * Helper function para obtener la descripción del blog post

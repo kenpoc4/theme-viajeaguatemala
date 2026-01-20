@@ -94,6 +94,11 @@ get_header(); ?>
                     <?php printf( _n( '%d min de lectura', '%d min de lectura', $reading_time, 'vguate' ), $reading_time ); ?>
                 </span>
             </div>
+
+            <!-- Barra de progreso de lectura -->
+            <div class="blog-single__progress-bar">
+                <div class="blog-single__progress-fill"></div>
+            </div>
         </header>
 
         <article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-single__article' ); ?>>

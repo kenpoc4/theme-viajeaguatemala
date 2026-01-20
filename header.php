@@ -58,8 +58,13 @@
                     <?php endif; ?>
 
                     <?php if ( $is_single_post ) : ?>
-                        <!-- En single: mostrar título del post -->
-                        <h1 class="site-header__post-title"><?php the_title(); ?></h1>
+                        <!-- En single: mostrar subtítulo del post -->
+                        <?php
+                        $subtitle = vguate_get_blog_post_subtitle();
+                        if ( $subtitle ) :
+                        ?>
+                            <p class="site-header__post-subtitle"><?php echo esc_html( $subtitle ); ?></p>
+                        <?php endif; ?>
                         <!-- Botón de regresar -->
                         <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-header__back-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
