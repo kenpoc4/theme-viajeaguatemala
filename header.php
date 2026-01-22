@@ -111,6 +111,9 @@
                     </button>
                     <div class="site-header__audio-player-inner">
                         <h3 class="site-header__audio-title"><?php the_title(); ?></h3>
+                        <div class="site-header__audio-content">
+                            <?php echo apply_filters( 'the_content', get_the_content() ); ?>
+                        </div>
                         <audio class="site-header__audio" controls preload="metadata">
                             <source src="<?php echo esc_url( $audio['url'] ); ?>" type="audio/mpeg">
                             Tu navegador no soporta el elemento de audio.
