@@ -67,4 +67,54 @@
         // Actualizar al cargar
         updateProgress();
     }
+
+    // ==========================================
+    // Reproductor de Audio Expandido
+    // ==========================================
+
+    const header = document.querySelector('.site-header--lateral');
+    const listenBtn = document.querySelector('.site-header__listen-btn');
+    const closeBtn = document.querySelector('.site-header__audio-close');
+    const audioElement = document.querySelector('.site-header__audio');
+
+    if (listenBtn && header) {
+        // Abrir reproductor
+        listenBtn.addEventListener('click', () => {
+            header.classList.add('is-audio-expanded');
+            document.body.classList.add('audio-player-open');
+            listenBtn.setAttribute('aria-expanded', 'true');
+        });
+
+        // Cerrar reproductor
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                closeAudioPlayer();
+            });
+        }
+
+        // Cerrar con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && header.classList.contains('is-audio-expanded')) {
+                closeAudioPlayer();
+            }
+        });
+
+        function closeAudioPlayer() {
+            // Agregar clase de cierre para animación de salida
+            header.classList.add('is-audio-closing');
+
+            // Pausar el audio
+            if (audioElement) {
+                audioElement.pause();
+            }
+
+            // Esperar a que termine la animación de los elementos internos
+            setTimeout(() => {
+                header.classList.remove('is-audio-expanded');
+                header.classList.remove('is-audio-closing');
+                document.body.classList.remove('audio-player-open');
+                listenBtn.setAttribute('aria-expanded', 'false');
+            }, 600);
+        }
+    }
 })();
