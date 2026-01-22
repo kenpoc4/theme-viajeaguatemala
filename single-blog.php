@@ -95,28 +95,6 @@ get_header(); ?>
                 </span>
             </div>
 
-            <?php
-            // Reproductor de audio si existe
-            $audio = vguate_get_blog_post_audio();
-            if ( $audio ) :
-            ?>
-                <div class="blog-single__audio">
-                    <button type="button" class="blog-single__audio-toggle" aria-expanded="false" aria-controls="blog-audio-player">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="audio-icon-headphones">
-                            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
-                            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
-                        </svg>
-                        <span><?php _e( 'Escuchar este artículo', 'vguate' ); ?></span>
-                    </button>
-                    <div id="blog-audio-player" class="blog-single__audio-player" hidden>
-                        <audio controls preload="metadata">
-                            <source src="<?php echo esc_url( $audio['url'] ); ?>" type="audio/mpeg">
-                            <?php _e( 'Tu navegador no soporta el elemento de audio.', 'vguate' ); ?>
-                        </audio>
-                    </div>
-                </div>
-            <?php endif; ?>
-
             <!-- Barra de progreso de lectura -->
             <div class="blog-single__progress-bar">
                 <div class="blog-single__progress-fill"></div>
