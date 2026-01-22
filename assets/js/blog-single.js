@@ -78,11 +78,18 @@
     const audioElement = document.querySelector('.site-header__audio');
 
     if (listenBtn && header) {
+        const audioContent = document.querySelector('.site-header__audio-content');
+
         // Abrir reproductor
         listenBtn.addEventListener('click', () => {
             header.classList.add('is-audio-expanded');
             document.body.classList.add('audio-player-open');
             listenBtn.setAttribute('aria-expanded', 'true');
+
+            // Resetear scroll del contenido
+            if (audioContent) {
+                audioContent.scrollTop = 0;
+            }
         });
 
         // Cerrar reproductor
@@ -115,6 +122,52 @@
                 document.body.classList.remove('audio-player-open');
                 listenBtn.setAttribute('aria-expanded', 'false');
             }, 600);
+        }
+
+        // ==========================================
+        // Scroll sincronizado con el audio
+        // ==========================================
+
+        if (audioElement && audioContent) {
+            // Sincronizar scroll con el tiempo del audio
+            audioElement.addEventListener('timeupdate', () => {
+                syncScrollWithAudio();
+            });
+
+            // También sincronizar cuando el usuario busca en el audio
+            audioElement.addEventListener('seeked', () => {
+                syncScrollWithAudio();
+            });
+
+            function syncScrollWithAudio() {
+                if (!audioElement.duration || audioElement.duration === Infinity) return;
+
+                const DELAY_SECONDS = 30;
+                const currentTime = audioElement.currentTime;
+                const duration = audioElement.duration;
+
+                // No hacer scroll en los primeros 10 segundos
+                if (currentTime < DELAY_SECONDS) {
+                    audioContent.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
+                // Calcular progreso considerando el delay
+                const adjustedTime = currentTime - DELAY_SECONDS;
+                const adjustedDuration = duration - DELAY_SECONDS;
+                const progress = adjustedTime / adjustedDuration;
+                const maxScroll = audioContent.scrollHeight - audioContent.clientHeight;
+                const targetScroll = progress * maxScroll;
+
+                // Scroll suave
+                audioContent.scrollTo({
+                    top: targetScroll,
+                    behavior: 'smooth'
+                });
+            }
         }
     }
 })();
