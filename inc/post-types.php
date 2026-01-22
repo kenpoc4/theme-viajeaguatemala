@@ -132,6 +132,15 @@ function vguate_blog_register_meta_boxes() {
         'normal',
         'high'
     );
+
+    add_meta_box(
+        'vguate_blog_audio',
+        __( 'Audio del Post', 'vguate' ),
+        'vguate_blog_audio_meta_box_callback',
+        'blog',
+        'normal',
+        'high'
+    );
 }
 add_action( 'add_meta_boxes', 'vguate_blog_register_meta_boxes' );
 
@@ -279,3 +288,200 @@ function vguate_get_blog_post_description( $post_id = null ) {
 
     return $description ? $description : '';
 }
+
+/**
+ * ==========================================
+ * Campo de Audio para Blog
+ * ==========================================
+ */
+
+/**
+ * Callback para renderizar el meta box de audio
+ */
+function vguate_blog_audio_meta_box_callback( $post ) {
+    // Agregar nonce para seguridad
+    wp_nonce_field( 'vguate_blog_audio_nonce', 'vguate_blog_audio_nonce' );
+
+    // Obtener valores guardados
+    $audio_id = get_post_meta( $post->ID, '_vguate_blog_audio_id', true );
+    $audio_url = get_post_meta( $post->ID, '_vguate_blog_audio_url', true );
+    ?>
+    <div class="vguate-audio-upload-wrapper">
+        <p>
+            <label for="vguate_blog_audio" style="display: block; margin-bottom: 8px; font-weight: 600;">
+                <?php _e( 'Archivo de audio:', 'vguate' ); ?>
+            </label>
+            <input
+                type="hidden"
+                id="vguate_blog_audio_id"
+                name="vguate_blog_audio_id"
+                value="<?php echo esc_attr( $audio_id ); ?>"
+            />
+            <input
+                type="text"
+                id="vguate_blog_audio_url"
+                name="vguate_blog_audio_url"
+                value="<?php echo esc_url( $audio_url ); ?>"
+                style="width: 70%;"
+                readonly
+                placeholder="<?php esc_attr_e( 'Selecciona un archivo de audio...', 'vguate' ); ?>"
+            />
+            <button type="button" class="button vguate-upload-audio-button" style="margin-left: 8px;">
+                <?php _e( 'Seleccionar Audio', 'vguate' ); ?>
+            </button>
+            <button type="button" class="button vguate-remove-audio-button" style="margin-left: 4px; <?php echo empty( $audio_url ) ? 'display:none;' : ''; ?>">
+                <?php _e( 'Eliminar', 'vguate' ); ?>
+            </button>
+        </p>
+
+        <!-- Vista previa del audio -->
+        <div class="vguate-audio-preview" style="margin-top: 15px; <?php echo empty( $audio_url ) ? 'display:none;' : ''; ?>">
+            <audio controls style="width: 100%; max-width: 400px;">
+                <source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
+                <?php _e( 'Tu navegador no soporta el elemento de audio.', 'vguate' ); ?>
+            </audio>
+        </div>
+    </div>
+
+    <p class="description">
+        <?php _e( 'Sube o selecciona un archivo de audio (MP3, WAV, OGG) para esta entrada. Los visitantes podrán escuchar el contenido del post.', 'vguate' ); ?>
+    </p>
+    <?php
+}
+
+/**
+ * Guardar el meta box de audio
+ */
+function vguate_blog_save_audio_meta_box( $post_id ) {
+    // Verificar nonce
+    if ( ! isset( $_POST['vguate_blog_audio_nonce'] ) ||
+         ! wp_verify_nonce( $_POST['vguate_blog_audio_nonce'], 'vguate_blog_audio_nonce' ) ) {
+        return;
+    }
+
+    // Verificar autoguardado
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+
+    // Verificar permisos
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+
+    // Guardar o eliminar el ID del audio
+    if ( isset( $_POST['vguate_blog_audio_id'] ) ) {
+        $audio_id = absint( $_POST['vguate_blog_audio_id'] );
+        if ( $audio_id ) {
+            update_post_meta( $post_id, '_vguate_blog_audio_id', $audio_id );
+        } else {
+            delete_post_meta( $post_id, '_vguate_blog_audio_id' );
+        }
+    }
+
+    // Guardar o eliminar la URL del audio
+    if ( isset( $_POST['vguate_blog_audio_url'] ) ) {
+        $audio_url = esc_url_raw( $_POST['vguate_blog_audio_url'] );
+        if ( $audio_url ) {
+            update_post_meta( $post_id, '_vguate_blog_audio_url', $audio_url );
+        } else {
+            delete_post_meta( $post_id, '_vguate_blog_audio_url' );
+        }
+    }
+}
+add_action( 'save_post_blog', 'vguate_blog_save_audio_meta_box' );
+
+/**
+ * Helper function para obtener el audio del blog post
+ *
+ * @param int $post_id ID del post (opcional, usa el actual si no se especifica)
+ * @return array|false Array con 'id' y 'url' del audio, o false si no hay audio
+ */
+function vguate_get_blog_post_audio( $post_id = null ) {
+    if ( null === $post_id ) {
+        $post_id = get_the_ID();
+    }
+
+    $audio_id = get_post_meta( $post_id, '_vguate_blog_audio_id', true );
+    $audio_url = get_post_meta( $post_id, '_vguate_blog_audio_url', true );
+
+    if ( ! $audio_url ) {
+        return false;
+    }
+
+    return array(
+        'id'  => $audio_id,
+        'url' => $audio_url,
+    );
+}
+
+/**
+ * Enqueue scripts para el Media Uploader en el admin
+ */
+function vguate_blog_admin_scripts( $hook ) {
+    global $post;
+
+    // Solo cargar en la página de edición del post type blog
+    if ( $hook !== 'post-new.php' && $hook !== 'post.php' ) {
+        return;
+    }
+
+    if ( ! $post || $post->post_type !== 'blog' ) {
+        return;
+    }
+
+    // Enqueue WordPress media scripts
+    wp_enqueue_media();
+
+    // Inline script para el Media Uploader
+    $script = "
+    jQuery(document).ready(function($) {
+        var mediaUploader;
+
+        // Botón para seleccionar audio
+        $('.vguate-upload-audio-button').on('click', function(e) {
+            e.preventDefault();
+
+            if (mediaUploader) {
+                mediaUploader.open();
+                return;
+            }
+
+            mediaUploader = wp.media({
+                title: '" . esc_js( __( 'Seleccionar Archivo de Audio', 'vguate' ) ) . "',
+                button: {
+                    text: '" . esc_js( __( 'Usar este audio', 'vguate' ) ) . "'
+                },
+                library: {
+                    type: 'audio'
+                },
+                multiple: false
+            });
+
+            mediaUploader.on('select', function() {
+                var attachment = mediaUploader.state().get('selection').first().toJSON();
+                $('#vguate_blog_audio_id').val(attachment.id);
+                $('#vguate_blog_audio_url').val(attachment.url);
+                $('.vguate-audio-preview').show();
+                $('.vguate-audio-preview audio source').attr('src', attachment.url);
+                $('.vguate-audio-preview audio')[0].load();
+                $('.vguate-remove-audio-button').show();
+            });
+
+            mediaUploader.open();
+        });
+
+        // Botón para eliminar audio
+        $('.vguate-remove-audio-button').on('click', function(e) {
+            e.preventDefault();
+            $('#vguate_blog_audio_id').val('');
+            $('#vguate_blog_audio_url').val('');
+            $('.vguate-audio-preview').hide();
+            $(this).hide();
+        });
+    });
+    ";
+
+    wp_add_inline_script( 'jquery', $script );
+}
+add_action( 'admin_enqueue_scripts', 'vguate_blog_admin_scripts' );
