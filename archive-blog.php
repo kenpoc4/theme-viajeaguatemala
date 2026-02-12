@@ -33,12 +33,6 @@ get_header(); ?>
                             <rect class="card-border-rect" x="1" y="1" rx="12" ry="12" />
                         </svg>
 
-                        <?php if ( has_post_thumbnail() ) : ?>
-                            <a href="<?php the_permalink(); ?>" class="post-thumbnail">
-                                <?php the_post_thumbnail( 'medium_large' ); ?>
-                            </a>
-                        <?php endif; ?>
-
                         <div class="entry-content">
                             <h2 class="entry-title">
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
@@ -90,18 +84,21 @@ get_header(); ?>
         $categories = get_terms( array(
             'taxonomy'   => 'category',
             'hide_empty' => true,
+            'exclude'    => array( get_cat_ID( 'Uncategorized' ) ),
         ) );
 
         if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) :
         ?>
-            <div class="blog-categories">
+            <ul class="blog-categories-list">
                 <?php foreach ( $categories as $category ) : ?>
-                    <a href="<?php echo esc_url( get_term_link( $category ) ); ?>" class="category-card">
-                        <span class="category-card__name"><?php echo esc_html( $category->name ); ?></span>
-                        <span class="category-card__count"><?php echo esc_html( $category->count ); ?> posts</span>
-                    </a>
+                    <li class="blog-categories-list__item">
+                        <a href="<?php echo esc_url( get_term_link( $category ) ); ?>" class="blog-categories-list__link">
+                            <span class="blog-categories-list__name"><?php echo esc_html( $category->name ); ?></span>
+                            <span class="blog-categories-list__count"><?php echo esc_html( $category->count ); ?></span>
+                        </a>
+                    </li>
                 <?php endforeach; ?>
-            </div>
+            </ul>
         <?php else : ?>
             <div class="no-results">
                 <h2>No hay categorías</h2>

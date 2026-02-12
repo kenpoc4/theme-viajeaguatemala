@@ -248,6 +248,86 @@ img {
 .mb-lg { margin-bottom: var(--spacing-lg); }
 
 /* ==========================================
+   Page Load - Reveal Animation
+   ========================================== */
+
+/* Estado inicial: todo invisible */
+.site-header--lateral .site-header__branding,
+.site-header--lateral .site-header__post-center,
+.site-header--lateral .site-header__navigation,
+.site-header--lateral .site-header__info,
+.site-header--lateral .site-header__divider,
+.site-content {
+    opacity: 0;
+    transform: translateY(16px);
+}
+
+/* Clase que activa las animaciones al cargar */
+.is-page-loaded .site-header__branding {
+    animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+
+.is-page-loaded .site-header__post-center {
+    animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+}
+
+.is-page-loaded .site-header__navigation {
+    animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+}
+
+.is-page-loaded .site-header__divider {
+    animation: revealUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+}
+
+.is-page-loaded .site-header__info {
+    animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+}
+
+.is-page-loaded .site-content {
+    animation: revealUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+}
+
+@keyframes revealUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Blur reveal para la imagen hero */
+.site-header--lateral.has-hero-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.is-page-loaded .site-header--lateral.has-hero-image::after {
+    animation: heroBlurReveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+
+@keyframes heroBlurReveal {
+    from {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+    to {
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+    }
+}
+
+/* ==========================================
    Responsive
    ========================================== */
 @media (max-width: 768px) {

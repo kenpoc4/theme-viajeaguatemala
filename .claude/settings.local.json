@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:\\\\Users\\\\Kenny Poncio\\\\Local Sites\\\\viaje-a-guatemala\\\\app\\\\public\\\\wp-content\\\\themes\\\\viaje-a-guatemala\" log --oneline -10)"
+    ]
+  }
+}

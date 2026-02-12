@@ -8,6 +8,7 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<script>requestAnimationFrame(function(){requestAnimationFrame(function(){document.body.classList.add('is-page-loaded');});});</script>
 
 <div class="site-wrapper">
     <!-- Header Lateral Sticky -->
@@ -46,7 +47,7 @@
                     $is_single_post = is_singular( 'blog' );
                     ?>
                     <?php if ( $logo_img ) : ?>
-                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-logo-link<?php echo $is_single_post ? ' site-logo-link--small' : ''; ?>">
+                        <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-logo-link">
                             <?php echo $logo_img; ?>
                         </a>
                     <?php else : ?>
@@ -58,11 +59,9 @@
                     <?php endif; ?>
 
                     <?php if ( ! $is_single_post ) :
-                        // En archivo: mostrar descripción del blog
+                        $blog_title = vguate_get_blog_title();
                         $blog_description = vguate_get_blog_description();
-                        if ( $blog_description ) : ?>
-                        <p class="site-description site-description--blog"><?php echo esc_html( $blog_description ); ?></p>
-                    <?php endif; endif; ?>
+                    endif; ?>
                 <?php else : ?>
                     <h1 class="site-title">
                         <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
@@ -77,6 +76,18 @@
                     <?php endif; ?>
                 <?php endif; ?>
             </div>
+
+            <?php if ( is_post_type_archive( 'blog' ) && ( $blog_title || $blog_description ) ) : ?>
+                <!-- Contenedor centrado: Título + Descripción del blog -->
+                <div class="site-header__post-center site-header__post-center--archive">
+                    <?php if ( $blog_title ) : ?>
+                        <h2 class="site-header__blog-title"><?php echo esc_html( $blog_title ); ?></h2>
+                    <?php endif; ?>
+                    <?php if ( $blog_description ) : ?>
+                        <p class="site-header__blog-description"><?php echo esc_html( $blog_description ); ?></p>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
 
             <?php if ( is_singular( 'blog' ) ) :
                 $subtitle = vguate_get_blog_post_subtitle();
@@ -145,8 +156,6 @@
                         </svg>
                         <span>Volver al blog</span>
                     </a>
-                <?php else : ?>
-                    <p>Descubre Guatemala</p>
                 <?php endif; ?>
             </div>
 

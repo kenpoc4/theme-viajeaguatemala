@@ -89,6 +89,15 @@ function vguate_register_theme_settings() {
         'vguate_header_section'                         // Sección
     );
 
+    // Campo: Título del Blog
+    add_settings_field(
+        'vguate_blog_title',                             // ID
+        __( 'Título', 'vguate' ),                        // Título
+        'vguate_blog_title_callback',                    // Callback
+        'vguate-theme-options-blog',                     // Página (pestaña blog)
+        'vguate_header_section'                          // Sección
+    );
+
     // Campo: Descripción del Blog
     add_settings_field(
         'vguate_blog_description',                      // ID
@@ -150,6 +159,27 @@ function vguate_header_section_callback() {
  */
 function vguate_logos_section_callback() {
     echo '<p>' . __( 'Configura las diferentes versiones del logo para el blog.', 'vguate' ) . '</p>';
+}
+
+/**
+ * Callback del campo título del blog
+ */
+function vguate_blog_title_callback() {
+    $options = get_option( 'vguate_theme_options' );
+    $title = isset( $options['blog_title'] ) ? $options['blog_title'] : '';
+    ?>
+    <input
+        type="text"
+        id="vguate_blog_title"
+        name="vguate_theme_options[blog_title]"
+        value="<?php echo esc_attr( $title ); ?>"
+        class="regular-text"
+        placeholder="<?php esc_attr_e( 'Ej: Viaje a Guatemala', 'vguate' ); ?>"
+    />
+    <p class="description">
+        <?php _e( 'Título que se mostrará en el header lateral del blog.', 'vguate' ); ?>
+    </p>
+    <?php
 }
 
 /**
@@ -329,6 +359,11 @@ function vguate_sanitize_theme_options( $input ) {
         }
     }
 
+    // Sanitizar título del blog
+    if ( isset( $input['blog_title'] ) ) {
+        $sanitized['blog_title'] = sanitize_text_field( $input['blog_title'] );
+    }
+
     // Sanitizar descripción del blog
     if ( isset( $input['blog_description'] ) ) {
         $sanitized['blog_description'] = sanitize_textarea_field( $input['blog_description'] );
@@ -408,6 +443,14 @@ function vguate_get_hero_image() {
     }
 
     return false;
+}
+
+/**
+ * Función helper para obtener el título del blog
+ */
+function vguate_get_blog_title() {
+    $options = get_option( 'vguate_theme_options' );
+    return isset( $options['blog_title'] ) ? $options['blog_title'] : '';
 }
 
 /**
