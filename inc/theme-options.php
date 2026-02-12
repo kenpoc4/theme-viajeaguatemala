@@ -144,6 +144,32 @@ function vguate_register_theme_settings() {
         'vguate_logos_section',                         // Sección
         array( 'field' => 'logo_white' )                // Args
     );
+
+    // Sección: Categorías
+    add_settings_section(
+        'vguate_categories_section',                    // ID
+        __( 'Categorías', 'vguate' ),                   // Título
+        'vguate_categories_section_callback',           // Callback
+        'vguate-theme-options-blog'                     // Página (pestaña blog)
+    );
+
+    // Campo: Hero Categorías (imagen)
+    add_settings_field(
+        'vguate_category_hero_image',                   // ID
+        __( 'Hero Categorías', 'vguate' ),              // Título
+        'vguate_category_hero_image_callback',          // Callback
+        'vguate-theme-options-blog',                    // Página (pestaña blog)
+        'vguate_categories_section'                     // Sección
+    );
+
+    // Campo: Título Categorías (texto)
+    add_settings_field(
+        'vguate_category_title',                        // ID
+        __( 'Título Categorías', 'vguate' ),            // Título
+        'vguate_category_title_callback',               // Callback
+        'vguate-theme-options-blog',                    // Página (pestaña blog)
+        'vguate_categories_section'                     // Sección
+    );
 }
 add_action( 'admin_init', 'vguate_register_theme_settings' );
 
@@ -345,13 +371,88 @@ function vguate_hero_image_callback() {
 }
 
 /**
+ * Callback de la sección categorías
+ */
+function vguate_categories_section_callback() {
+    echo '<p>' . __( 'Configura la imagen hero y el título para las páginas de categoría.', 'vguate' ) . '</p>';
+}
+
+/**
+ * Callback del campo Hero Categorías (imagen)
+ */
+function vguate_category_hero_image_callback() {
+    $options = get_option( 'vguate_theme_options' );
+    $image_id = isset( $options['category_hero_image'] ) ? $options['category_hero_image'] : '';
+    $image_url = $image_id ? wp_get_attachment_image_url( $image_id, 'full' ) : '';
+    ?>
+    <div class="vguate-image-upload vguate-category-hero-upload">
+        <input
+            type="hidden"
+            id="vguate_category_hero_image"
+            name="vguate_theme_options[category_hero_image]"
+            value="<?php echo esc_attr( $image_id ); ?>"
+        />
+
+        <div class="vguate-image-preview vguate-category-hero-preview" style="margin-bottom: 10px;">
+            <?php if ( $image_url ) : ?>
+                <img
+                    src="<?php echo esc_url( $image_url ); ?>"
+                    alt="Hero Categorías"
+                    style="max-width: 300px; height: auto; display: block;"
+                />
+            <?php else : ?>
+                <img
+                    src=""
+                    alt="Hero Categorías"
+                    style="max-width: 300px; height: auto; display: none;"
+                />
+            <?php endif; ?>
+        </div>
+
+        <button type="button" class="button vguate-upload-category-hero-button">
+            <?php _e( 'Seleccionar Imagen', 'vguate' ); ?>
+        </button>
+
+        <button type="button" class="button vguate-remove-category-hero-button" <?php echo $image_url ? '' : 'style="display:none;"'; ?>>
+            <?php _e( 'Remover Imagen', 'vguate' ); ?>
+        </button>
+
+        <p class="description">
+            <?php _e( 'Imagen hero para el header lateral en las páginas de categoría. Recomendado: 800x1200px o mayor.', 'vguate' ); ?>
+        </p>
+    </div>
+    <?php
+}
+
+/**
+ * Callback del campo Título Categorías (texto)
+ */
+function vguate_category_title_callback() {
+    $options = get_option( 'vguate_theme_options' );
+    $title = isset( $options['category_title'] ) ? $options['category_title'] : '';
+    ?>
+    <input
+        type="text"
+        id="vguate_category_title"
+        name="vguate_theme_options[category_title]"
+        value="<?php echo esc_attr( $title ); ?>"
+        class="regular-text"
+        placeholder="<?php esc_attr_e( 'Ej: Categorías del Blog', 'vguate' ); ?>"
+    />
+    <p class="description">
+        <?php _e( 'Título que se mostrará en el header lateral de las páginas de categoría.', 'vguate' ); ?>
+    </p>
+    <?php
+}
+
+/**
  * Sanitizar las opciones del tema
  */
 function vguate_sanitize_theme_options( $input ) {
     $sanitized = array();
 
     // Campos de imagen a sanitizar
-    $image_fields = array( 'hero_image', 'logo', 'logo_black', 'logo_white' );
+    $image_fields = array( 'hero_image', 'logo', 'logo_black', 'logo_white', 'category_hero_image' );
 
     foreach ( $image_fields as $field ) {
         if ( isset( $input[ $field ] ) ) {
@@ -367,6 +468,11 @@ function vguate_sanitize_theme_options( $input ) {
     // Sanitizar descripción del blog
     if ( isset( $input['blog_description'] ) ) {
         $sanitized['blog_description'] = sanitize_textarea_field( $input['blog_description'] );
+    }
+
+    // Sanitizar título de categorías
+    if ( isset( $input['category_title'] ) ) {
+        $sanitized['category_title'] = sanitize_text_field( $input['category_title'] );
     }
 
     return $sanitized;
@@ -516,6 +622,28 @@ function vguate_get_logo_img( $type = 'logo', $attr = array() ) {
 }
 
 /**
+ * Función helper para obtener la imagen hero de categorías
+ */
+function vguate_get_category_hero_image() {
+    $options = get_option( 'vguate_theme_options' );
+    $image_id = isset( $options['category_hero_image'] ) ? $options['category_hero_image'] : '';
+
+    if ( $image_id ) {
+        return wp_get_attachment_image_url( $image_id, 'full' );
+    }
+
+    return false;
+}
+
+/**
+ * Función helper para obtener el título de categorías
+ */
+function vguate_get_category_title() {
+    $options = get_option( 'vguate_theme_options' );
+    return isset( $options['category_title'] ) ? $options['category_title'] : '';
+}
+
+/**
  * Encolar scripts para el admin
  */
 function vguate_admin_enqueue_scripts( $hook ) {
@@ -655,6 +783,40 @@ function vguate_admin_enqueue_scripts( $hook ) {
                 var container = $(this).closest(".vguate-logo-upload");
                 container.find("input[type=hidden]").val("");
                 container.find(".vguate-logo-preview img").attr("src", "").hide();
+                $(this).hide();
+            });
+
+            // Category hero upload
+            var categoryHeroUploader;
+            $(".vguate-upload-category-hero-button").on("click", function(e) {
+                e.preventDefault();
+
+                if (categoryHeroUploader) {
+                    categoryHeroUploader.open();
+                    return;
+                }
+
+                categoryHeroUploader = wp.media({
+                    title: "Seleccionar Imagen Hero de Categorías",
+                    button: { text: "Usar esta imagen" },
+                    multiple: false
+                });
+
+                categoryHeroUploader.on("select", function() {
+                    var attachment = categoryHeroUploader.state().get("selection").first().toJSON();
+                    $("#vguate_category_hero_image").val(attachment.id);
+                    $(".vguate-category-hero-preview img").attr("src", attachment.url).show();
+                    $(".vguate-remove-category-hero-button").show();
+                });
+
+                categoryHeroUploader.open();
+            });
+
+            // Remove category hero
+            $(".vguate-remove-category-hero-button").on("click", function(e) {
+                e.preventDefault();
+                $("#vguate_category_hero_image").val("");
+                $(".vguate-category-hero-preview img").attr("src", "").hide();
                 $(this).hide();
             });
         });

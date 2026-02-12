@@ -485,3 +485,17 @@ function vguate_blog_admin_scripts( $hook ) {
     wp_add_inline_script( 'jquery', $script );
 }
 add_action( 'admin_enqueue_scripts', 'vguate_blog_admin_scripts' );
+
+/**
+ * Incluir CPT "blog" en las queries de categoría
+ *
+ * WordPress por defecto solo muestra posts tipo "post" en categorías.
+ * Este hook incluye el CPT "blog" para que las páginas de categoría
+ * muestren las entradas del blog.
+ */
+function vguate_include_blog_in_category_query( $query ) {
+    if ( ! is_admin() && $query->is_main_query() && $query->is_category() ) {
+        $query->set( 'post_type', array( 'post', 'blog' ) );
+    }
+}
+add_action( 'pre_get_posts', 'vguate_include_blog_in_category_query' );

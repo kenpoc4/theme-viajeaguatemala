@@ -1,0 +1,100 @@
+/**
+ * Estilos para Category Archive
+ *
+ * Solo estilos nuevos; el resto viene de blog.css
+ *
+ * @package Viaje a Guatemala
+ */
+
+/* ==========================================
+   Category Header
+   ========================================== */
+
+.blog-category__header {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Título con gradiente animado */
+.blog-category__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+    line-height: 1.3;
+    background: linear-gradient(
+        90deg,
+        var(--color-primary),
+        var(--color-secondary),
+        var(--color-contrast),
+        var(--color-primary)
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: title-color-cycle 12s ease-in-out infinite;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Meta: cantidad de entradas */
+.blog-category__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+.blog-category__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+}
+
+.blog-category__meta svg {
+    color: var(--color-contrast);
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+}
+
+/* Descripción de la categoría */
+.blog-category__description {
+    margin-top: var(--spacing-md);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--color-text-light);
+    max-width: 600px;
+}
+
+/* ==========================================
+   Responsive - Mobile
+   ========================================== */
+
+@media (max-width: 768px) {
+    .blog-category__header {
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
+    }
+
+    .blog-category__title {
+        font-size: 1.2rem;
+    }
+
+    .blog-category__meta span {
+        font-size: 0.65rem;
+    }
+
+    .blog-category__description {
+        font-size: 0.85rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .blog-category__title {
+        font-size: 1.3rem;
+    }
+}

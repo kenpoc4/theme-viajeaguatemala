@@ -60,6 +60,25 @@ function vguate_enqueue_styles() {
         vguate_enqueue_single_style( $post_type );
     }
 
+    // Estilos específicos para categorías
+    if ( is_category() ) {
+        // Cargar estilos compartidos del blog (cards, breadcrumbs, paginación, etc.)
+        wp_enqueue_style(
+            'vguate-post-type-blog',
+            VGUATE_THEME_URI . '/assets/css/post-types/blog.css',
+            array( 'vguate-global' ),
+            VGUATE_VERSION
+        );
+
+        // Cargar estilos específicos de categoría
+        wp_enqueue_style(
+            'vguate-category',
+            VGUATE_THEME_URI . '/assets/css/taxonomies/category.css',
+            array( 'vguate-post-type-blog' ),
+            VGUATE_VERSION
+        );
+    }
+
     // Estilos específicos para pages
     if ( is_page() ) {
         $page_slug = get_post_field( 'post_name', get_queried_object_id() );

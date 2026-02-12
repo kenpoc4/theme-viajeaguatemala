@@ -17,6 +17,12 @@
     if ( is_singular( 'blog' ) && has_post_thumbnail() ) {
         // En single blog, usar la imagen destacada del post
         $hero_image = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+    } elseif ( is_category() ) {
+        // En categoría, usar hero de categorías (fallback a hero general)
+        $hero_image = vguate_get_category_hero_image();
+        if ( ! $hero_image ) {
+            $hero_image = vguate_get_hero_image();
+        }
     } else {
         // En archivo, usar la imagen hero de las opciones del tema
         $hero_image = vguate_get_hero_image();
@@ -30,6 +36,11 @@
         $header_class .= ' site-header--single';
     }
 
+    // Agregar clase específica para categoría
+    if ( is_category() ) {
+        $header_class .= ' site-header--category';
+    }
+
     if ( $hero_image ) {
         $header_style = 'style="background-image: url(' . esc_url( $hero_image ) . '); background-size: cover; background-position: center; background-repeat: no-repeat;"';
         $header_class .= ' has-hero-image';
@@ -39,7 +50,7 @@
         <div class="site-header__inner">
             <!-- Logo/Título del sitio -->
             <div class="site-header__branding">
-                <?php if ( is_post_type_archive( 'blog' ) || is_singular( 'blog' ) ) : ?>
+                <?php if ( is_post_type_archive( 'blog' ) || is_singular( 'blog' ) || is_category() ) : ?>
                     <?php
                     // Determinar qué logo usar según si hay imagen hero
                     $logo_type = $hero_image ? 'logo_white' : 'logo';
@@ -88,6 +99,20 @@
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
+
+            <?php
+            if ( is_category() ) :
+                $category_title = vguate_get_category_title();
+                if ( $category_title ) :
+            ?>
+                <!-- Contenedor centrado: Título de categorías -->
+                <div class="site-header__post-center site-header__post-center--archive">
+                    <h2 class="site-header__blog-title"><?php echo esc_html( $category_title ); ?></h2>
+                </div>
+            <?php
+                endif;
+            endif;
+            ?>
 
             <?php if ( is_singular( 'blog' ) ) :
                 $subtitle = vguate_get_blog_post_subtitle();
@@ -148,7 +173,7 @@
 
             <!-- Información adicional o widgets del header -->
             <div class="site-header__info">
-                <?php if ( is_singular( 'blog' ) ) : ?>
+                <?php if ( is_singular( 'blog' ) || is_category() ) : ?>
                     <a href="<?php echo esc_url( get_post_type_archive_link( 'blog' ) ); ?>" class="site-header__back-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="19" y1="12" x2="5" y2="12"></line>
