@@ -493,9 +493,22 @@ add_action( 'admin_enqueue_scripts', 'vguate_blog_admin_scripts' );
  * Este hook incluye el CPT "blog" para que las páginas de categoría
  * muestren las entradas del blog.
  */
-function vguate_include_blog_in_category_query( $query ) {
-    if ( ! is_admin() && $query->is_main_query() && $query->is_category() ) {
+function vguate_blog_custom_queries( $query ) {
+    if ( is_admin() || ! $query->is_main_query() ) {
+        return;
+    }
+
+    $per_page = vguate_get_posts_per_page();
+
+    // Categorías: incluir CPT "blog" + posts por página del dashboard
+    if ( $query->is_category() ) {
         $query->set( 'post_type', array( 'post', 'blog' ) );
+        $query->set( 'posts_per_page', $per_page );
+    }
+
+    // Blog archive: posts por página del dashboard
+    if ( $query->is_post_type_archive( 'blog' ) ) {
+        $query->set( 'posts_per_page', $per_page );
     }
 }
-add_action( 'pre_get_posts', 'vguate_include_blog_in_category_query' );
+add_action( 'pre_get_posts', 'vguate_blog_custom_queries' );

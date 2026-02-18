@@ -60,13 +60,47 @@ get_header(); ?>
             </div>
 
             <?php
-            // Paginación
-            the_posts_pagination( array(
-                'mid_size'  => 2,
-                'prev_text' => __( '&laquo; Anterior', 'vguate' ),
-                'next_text' => __( 'Siguiente &raquo;', 'vguate' ),
-            ) );
+            // Paginación personalizada prev/next
+            $current_page = max( 1, get_query_var( 'paged' ) );
+            $total_pages  = $wp_query->max_num_pages;
+
+            if ( $total_pages > 1 ) :
             ?>
+                <nav class="blog-pagination" aria-label="Paginación de entradas">
+                    <!-- Botón Anterior -->
+                    <div class="blog-pagination__prev">
+                        <?php if ( $current_page > 1 ) : ?>
+                            <a href="<?php echo esc_url( get_pagenum_link( $current_page - 1 ) ); ?>" class="blog-pagination__btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                <span>Anterior</span>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Indicador de página -->
+                    <div class="blog-pagination__indicator">
+                        <span class="blog-pagination__current"><?php echo esc_html( $current_page ); ?></span>
+                        <span class="blog-pagination__separator">/</span>
+                        <span class="blog-pagination__total"><?php echo esc_html( $total_pages ); ?></span>
+                    </div>
+
+                    <!-- Botón Siguiente -->
+                    <div class="blog-pagination__next">
+                        <?php if ( $current_page < $total_pages ) : ?>
+                            <a href="<?php echo esc_url( get_pagenum_link( $current_page + 1 ) ); ?>" class="blog-pagination__btn">
+                                <span>Siguiente</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </nav>
+            <?php endif; ?>
 
         <?php else : ?>
 

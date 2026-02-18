@@ -107,6 +107,15 @@ function vguate_register_theme_settings() {
         'vguate_header_section'                         // Sección
     );
 
+    // Campo: Blogs por paginación
+    add_settings_field(
+        'vguate_posts_per_page',                        // ID
+        __( 'Blogs por paginación', 'vguate' ),         // Título
+        'vguate_posts_per_page_callback',               // Callback
+        'vguate-theme-options-blog',                    // Página (pestaña blog)
+        'vguate_header_section'                         // Sección
+    );
+
     // Sección: Logos
     add_settings_section(
         'vguate_logos_section',                         // ID
@@ -224,6 +233,29 @@ function vguate_blog_description_callback() {
     ><?php echo esc_textarea( $description ); ?></textarea>
     <p class="description">
         <?php _e( 'Esta descripción se mostrará en el header lateral del blog.', 'vguate' ); ?>
+    </p>
+    <?php
+}
+
+/**
+ * Callback del campo blogs por paginación
+ */
+function vguate_posts_per_page_callback() {
+    $options = get_option( 'vguate_theme_options' );
+    $value = isset( $options['posts_per_page'] ) ? $options['posts_per_page'] : 1;
+    ?>
+    <input
+        type="number"
+        id="vguate_posts_per_page"
+        name="vguate_theme_options[posts_per_page]"
+        value="<?php echo esc_attr( $value ); ?>"
+        class="small-text"
+        min="1"
+        max="50"
+        step="1"
+    />
+    <p class="description">
+        <?php _e( 'Cantidad de entradas que se muestran por página en el blog y las categorías.', 'vguate' ); ?>
     </p>
     <?php
 }
@@ -475,6 +507,12 @@ function vguate_sanitize_theme_options( $input ) {
         $sanitized['category_title'] = sanitize_text_field( $input['category_title'] );
     }
 
+    // Sanitizar blogs por paginación
+    if ( isset( $input['posts_per_page'] ) ) {
+        $value = absint( $input['posts_per_page'] );
+        $sanitized['posts_per_page'] = max( 1, min( 50, $value ) );
+    }
+
     return $sanitized;
 }
 
@@ -619,6 +657,15 @@ function vguate_get_logo_img( $type = 'logo', $attr = array() ) {
     }
 
     return '';
+}
+
+/**
+ * Función helper para obtener blogs por paginación
+ */
+function vguate_get_posts_per_page() {
+    $options = get_option( 'vguate_theme_options' );
+    $value = isset( $options['posts_per_page'] ) ? absint( $options['posts_per_page'] ) : 1;
+    return max( 1, $value );
 }
 
 /**
