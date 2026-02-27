@@ -1,0 +1,12 @@
+{
+    "name": "viaje-a-guatemala",
+    "version": "0.1.0",
+    "description": "Theme WordPress - Viaje a Guatemala",
+    "scripts": {
+        "build": "webpack --config webpack.config.js --mode production",
+        "start": "webpack --config webpack.config.js --mode development --watch"
+    },
+    "devDependencies": {
+        "@wordpress/scripts": "^30.0.0"
+    }
+}

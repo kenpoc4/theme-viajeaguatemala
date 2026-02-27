@@ -1,0 +1,431 @@
+/* =========================================================
+   Carrusel de Imágenes — Estilos Frontend
+   ========================================================= */
+
+/* ── Wrapper externo ───────────────────────────────────── */
+.vguate-carousel-wrapper {
+    width: 100%;
+}
+
+/* ── Carrusel ─────────────────────────────────────────── */
+.vguate-carousel {
+    position: relative;
+    width: 100%;
+    padding: 0 56px;
+    box-sizing: border-box;
+}
+
+.vguate-carousel__track-wrapper {
+    overflow: hidden;
+    width: 100%;
+}
+
+.vguate-carousel__track {
+    display: flex;
+    width: 100%;
+    transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Slides ───────────────────────────────────────────── */
+.vguate-carousel__slide {
+    flex: 0 0 calc(100% / 3);
+    padding: 0 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    outline: none;
+}
+
+.vguate-carousel__slide img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    transition:
+        transform  300ms cubic-bezier(0.4, 0, 0.2, 1),
+        filter     300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vguate-carousel__slide:hover img,
+.vguate-carousel__slide:focus-visible img {
+    transform: scale(1.03);
+    filter:    brightness(1.05);
+}
+
+/* Imagen seleccionada → anillo verde */
+.vguate-carousel__slide.is-selected img {
+    box-shadow: 0 0 0 3px var(--color-primary, #1ED760);
+    transform:  scale(1.02);
+}
+
+.vguate-carousel__slide:focus-visible {
+    border-radius: 14px;
+    box-shadow: 0 0 0 3px var(--color-contrast, #4100f4);
+}
+
+/* ── Botones de navegación ────────────────────────────────
+   !important para neutralizar el global:
+   button { padding: 14px 32px; display: inline-block; border-radius: 24px }
+   ─────────────────────────────────────────────────────── */
+.vguate-carousel__btn {
+    display:         flex !important;
+    align-items:     center;
+    justify-content: center;
+    padding:         0 !important;
+    width:           44px !important;
+    height:          44px !important;
+    border-radius:   50% !important;
+    flex-shrink:     0;
+
+    position:  absolute;
+    top:       50%;
+    transform: translateY(-50%);
+    z-index:   2;
+
+    background:  var(--color-white, #fff);
+    border:      none;
+    box-shadow:  var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.12));
+    color:       var(--color-text, #000);
+    cursor:      pointer;
+
+    transition:
+        background var(--transition-fast, 150ms ease),
+        box-shadow var(--transition-fast, 150ms ease);
+}
+
+.vguate-carousel__btn:active {
+    transform: translateY(-50%) scale(1) !important;
+}
+
+.vguate-carousel__btn:hover {
+    background: var(--color-primary, #1ED760);
+    color:      var(--color-white, #fff);
+    box-shadow: 0 4px 20px rgba(30, 215, 96, 0.35);
+}
+
+.vguate-carousel__btn:focus-visible {
+    outline:        3px solid var(--color-contrast, #4100f4);
+    outline-offset: 2px;
+}
+
+.vguate-carousel__btn:disabled {
+    opacity:        0.25;
+    cursor:         default;
+    pointer-events: none;
+}
+
+.vguate-carousel__btn svg { display: block; flex-shrink: 0; }
+
+.vguate-carousel__btn--prev { left:  4px; }
+.vguate-carousel__btn--next { right: 4px; }
+
+
+/* =========================================================
+   Panel de Vista Previa
+   =========================================================
+   Usamos el truco grid-template-rows: 0fr → 1fr para
+   animar la altura sin conocerla de antemano.
+   ========================================================= */
+
+.vguate-carousel__preview {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity:     0;
+    margin-top:  0;
+    transition:
+        grid-template-rows 400ms cubic-bezier(0.4, 0, 0.2, 1),
+        opacity            300ms ease 50ms,
+        margin-top         400ms cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.vguate-carousel__preview.is-open {
+    grid-template-rows: 1fr;
+    opacity:     1;
+    margin-top:  20px;
+    pointer-events: auto;
+}
+
+.vguate-carousel__preview-inner {
+    overflow:   hidden; /* requerido por el truco grid-template-rows */
+    min-height: 0;
+}
+
+/* Contenedor de la imagen y el skeleton (position:relative para el overlay) */
+.vguate-carousel__preview-media {
+    position:      relative;
+    border-radius: 16px;
+    overflow:      hidden;
+}
+
+/* ── Skeleton (shimmer mientras carga la imagen) ── */
+.vguate-carousel__preview-skeleton {
+    position: absolute;
+    inset:    0;
+    border-radius: 16px;
+    background: linear-gradient(
+        90deg,
+        #e8e8e8 25%,
+        #d0d0d0 50%,
+        #e8e8e8 75%
+    );
+    background-size: 300% 100%;
+    animation: vguate-shimmer 1.6s infinite linear;
+    opacity:    0;
+    transition: opacity 200ms ease;
+}
+
+.vguate-carousel__preview-skeleton.is-loading {
+    opacity: 1;
+}
+
+@keyframes vguate-shimmer {
+    0%   { background-position: 150% 0; }
+    100% { background-position: -150% 0; }
+}
+
+/* ── Imagen de previsualización ── */
+.vguate-carousel__preview-img {
+    width:      100%;
+    height:     60vh;
+    object-fit: cover;
+    display:    block;
+    /* border-radius lo aplica el padre (.preview-media) */
+
+    opacity:   0;
+    filter:    blur(8px);   /* scale() NO es una función de filter */
+    transform: scale(1.02); /* scale va en transform */
+    transition:
+        opacity   450ms cubic-bezier(0.4, 0, 0.2, 1),
+        filter    450ms cubic-bezier(0.4, 0, 0.2, 1),
+        transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vguate-carousel__preview-img.is-loaded {
+    opacity:   1;
+    filter:    blur(0);
+    transform: scale(1);
+}
+
+/* ── Botones de acción: superpuestos sobre la imagen, esquina inferior derecha ── */
+.vguate-carousel__preview-actions {
+    position:        absolute;
+    bottom:          36px;
+    right:           16px;
+    display:         flex;
+    gap:             8px;
+    z-index:         1;
+}
+
+/* Reset completo del estilo global de button, luego rebuild */
+.vguate-carousel__preview-btn {
+    all:         unset;
+    box-sizing:  border-box;
+    display:     flex;
+    align-items: center;
+    gap:         6px;
+    padding:     9px 16px;
+    border-radius: 24px;
+    font-family: var(--font-primary, inherit);
+    font-size:   13px;
+    font-weight: 600;
+    line-height: 1;
+    cursor:      pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+        background 150ms ease,
+        box-shadow 150ms ease,
+        transform  150ms ease;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.vguate-carousel__preview-btn:active {
+    transform: scale(0.97);
+}
+
+.vguate-carousel__preview-btn--close {
+    background: rgba(255, 255, 255, 0.88);
+    color:      #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.vguate-carousel__preview-btn--close:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.vguate-carousel__preview-btn--expand {
+    background: rgba(0, 0, 0, 0.72);
+    color:      #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.vguate-carousel__preview-btn--expand:hover {
+    background: var(--color-primary, #1ED760);
+    color:      #000;
+    box-shadow: 0 4px 16px rgba(30, 215, 96, 0.4);
+}
+
+.vguate-carousel__preview-btn:focus-visible {
+    outline:        3px solid var(--color-contrast, #4100f4);
+    outline-offset: 2px;
+}
+
+.vguate-carousel__preview-btn svg {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   Lightbox
+   ========================================================= */
+
+.vguate-lightbox {
+    position:   fixed;
+    inset:      0;
+    z-index:    99999;
+    display:    flex;
+    align-items:    center;
+    justify-content: center;
+
+    opacity:        0;
+    pointer-events: none;
+    transition:     opacity 300ms ease;
+}
+
+.vguate-lightbox.is-open {
+    opacity:        1;
+    pointer-events: auto;
+}
+
+/* Fondo oscuro con blur */
+.vguate-lightbox__backdrop {
+    position:   absolute;
+    inset:      0;
+    background: rgba(0, 0, 0, 0.90);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor:     pointer;
+}
+
+/* Contenedor central */
+.vguate-lightbox__container {
+    position: relative;
+    z-index:  1;
+    display:  flex;
+    align-items:    center;
+    justify-content: center;
+    max-width:  95vw;
+    max-height: 95vh;
+}
+
+/* ── Spinner de carga ── */
+.vguate-lightbox__loader {
+    position:  absolute;
+    display:   flex;
+    align-items:    center;
+    justify-content: center;
+    transition: opacity 250ms ease;
+}
+
+.vguate-lightbox__loader.is-hidden {
+    opacity:        0;
+    pointer-events: none;
+}
+
+.vguate-lightbox__spinner {
+    width:  44px;
+    height: 44px;
+    border: 3px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: vguate-spin 0.75s linear infinite;
+}
+
+@keyframes vguate-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Imagen en el lightbox ── */
+.vguate-lightbox__img {
+    display:    block;
+    max-width:  95vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+
+    opacity:   0;
+    filter:    blur(12px);  /* scale() NO es función de filter */
+    transform: scale(1.03); /* scale va en transform */
+    transition:
+        opacity   500ms cubic-bezier(0.4, 0, 0.2, 1),
+        filter    500ms cubic-bezier(0.4, 0, 0.2, 1),
+        transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vguate-lightbox__img.is-loaded {
+    opacity:   1;
+    filter:    blur(0);
+    transform: scale(1);
+}
+
+/* ── Botón cerrar lightbox ──
+   Es hijo directo de .vguate-lightbox (position:fixed que cubre el viewport),
+   por lo que top/right son siempre relativo al viewport. */
+.vguate-lightbox__close {
+    all:        unset;
+    box-sizing: border-box;
+    position:   absolute;
+    top:        16px;
+    right:      16px;
+    z-index:    2; /* encima del backdrop y el container */
+
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    width:   44px;
+    height:  44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color:   #fff;
+    cursor:  pointer;
+    transition:
+        background 150ms ease,
+        transform  150ms ease;
+}
+
+.vguate-lightbox__close:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform:  scale(1.1);
+}
+
+.vguate-lightbox__close:active {
+    transform: scale(0.95);
+}
+
+.vguate-lightbox__close:focus-visible {
+    outline:        3px solid #fff;
+    outline-offset: 3px;
+}
+
+.vguate-lightbox__close svg {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .vguate-carousel { padding: 0 44px; }
+
+    .vguate-carousel__slide img { border-radius: 8px; }
+
+    .vguate-carousel__preview-img { height: 50vw; }
+}

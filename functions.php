@@ -31,6 +31,11 @@ require_once VGUATE_THEME_DIR . '/inc/enqueue-scripts.php';
 require_once VGUATE_THEME_DIR . '/inc/theme-options.php';
 
 /**
+ * Include Gutenberg blocks
+ */
+require_once VGUATE_THEME_DIR . '/inc/blocks.php';
+
+/**
  * Theme Setup
  */
 function vguate_theme_setup() {
