@@ -1,2 +1,5 @@
 node_modules/
-build/
+
+# build/ SÍ se versiona: el bloque del carrusel se registra desde build/blocks/carousel.
+# Versionarlo evita que el bloque desaparezca en un clon/deploy sin correr "npm run build".
+# Si prefieres no versionarlo, vuelve a ignorarlo y añade el build al pipeline de despliegue.

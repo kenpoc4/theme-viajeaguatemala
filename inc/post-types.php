@@ -98,7 +98,7 @@ function vguate_register_custom_post_types() {
         'menu_icon'      => 'dashicons-edit-large',
         'rewrite_slug'   => 'blog',
         'has_archive'    => true,
-        'supports'       => array( 'title', 'editor', 'thumbnail', 'excerpt', 'author', 'comments', 'revisions' ),
+        'supports'       => array( 'title', 'editor', 'thumbnail', 'excerpt', 'author', 'revisions' ),
         'taxonomies'     => array( 'category', 'post_tag' ),
         'menu_position'  => 5,
     ) );
@@ -179,7 +179,7 @@ function vguate_blog_subtitle_meta_box_callback( $post ) {
 function vguate_blog_save_subtitle_meta_box( $post_id ) {
     // Verificar nonce
     if ( ! isset( $_POST['vguate_blog_subtitle_nonce'] ) ||
-         ! wp_verify_nonce( $_POST['vguate_blog_subtitle_nonce'], 'vguate_blog_subtitle_nonce' ) ) {
+         ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['vguate_blog_subtitle_nonce'] ) ), 'vguate_blog_subtitle_nonce' ) ) {
         return;
     }
 
@@ -195,7 +195,7 @@ function vguate_blog_save_subtitle_meta_box( $post_id ) {
 
     // Guardar o eliminar el valor
     if ( isset( $_POST['vguate_blog_subtitle'] ) ) {
-        $subtitle = sanitize_text_field( $_POST['vguate_blog_subtitle'] );
+        $subtitle = sanitize_text_field( wp_unslash( $_POST['vguate_blog_subtitle'] ) );
         update_post_meta( $post_id, '_vguate_blog_subtitle', $subtitle );
     }
 }
@@ -235,7 +235,7 @@ function vguate_blog_description_meta_box_callback( $post ) {
 function vguate_blog_save_description_meta_box( $post_id ) {
     // Verificar nonce
     if ( ! isset( $_POST['vguate_blog_description_nonce'] ) ||
-         ! wp_verify_nonce( $_POST['vguate_blog_description_nonce'], 'vguate_blog_description_nonce' ) ) {
+         ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['vguate_blog_description_nonce'] ) ), 'vguate_blog_description_nonce' ) ) {
         return;
     }
 
@@ -251,7 +251,7 @@ function vguate_blog_save_description_meta_box( $post_id ) {
 
     // Guardar o eliminar el valor
     if ( isset( $_POST['vguate_blog_description'] ) ) {
-        $description = sanitize_textarea_field( $_POST['vguate_blog_description'] );
+        $description = sanitize_textarea_field( wp_unslash( $_POST['vguate_blog_description'] ) );
         update_post_meta( $post_id, '_vguate_blog_description', $description );
     }
 }
@@ -355,7 +355,7 @@ function vguate_blog_audio_meta_box_callback( $post ) {
 function vguate_blog_save_audio_meta_box( $post_id ) {
     // Verificar nonce
     if ( ! isset( $_POST['vguate_blog_audio_nonce'] ) ||
-         ! wp_verify_nonce( $_POST['vguate_blog_audio_nonce'], 'vguate_blog_audio_nonce' ) ) {
+         ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['vguate_blog_audio_nonce'] ) ), 'vguate_blog_audio_nonce' ) ) {
         return;
     }
 
@@ -381,7 +381,7 @@ function vguate_blog_save_audio_meta_box( $post_id ) {
 
     // Guardar o eliminar la URL del audio
     if ( isset( $_POST['vguate_blog_audio_url'] ) ) {
-        $audio_url = esc_url_raw( $_POST['vguate_blog_audio_url'] );
+        $audio_url = esc_url_raw( wp_unslash( $_POST['vguate_blog_audio_url'] ) );
         if ( $audio_url ) {
             update_post_meta( $post_id, '_vguate_blog_audio_url', $audio_url );
         } else {

@@ -28,7 +28,7 @@ get_header(); ?>
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
-                            <span>Blog</span>
+                            <span><?php esc_html_e( 'Blog', 'vguate' ); ?></span>
                         </a>
                     </li>
                     <?php if ( $first_category ) : ?>
@@ -62,7 +62,7 @@ get_header(); ?>
                 </span>
 
                 <?php
-                $categories = get_the_category();
+                // $categories ya fue obtenido arriba para los breadcrumbs.
                 if ( ! empty( $categories ) ) :
                 ?>
                     <span class="blog-single__categories">
@@ -81,10 +81,10 @@ get_header(); ?>
                 <?php endif; ?>
 
                 <?php
-                // Tiempo de lectura estimado
+                // Tiempo de lectura estimado (conteo de palabras compatible con UTF-8/acentos)
                 $content = get_the_content();
-                $word_count = str_word_count( strip_tags( $content ) );
-                $reading_time = ceil( $word_count / 200 ); // 200 palabras por minuto
+                $word_count = preg_match_all( '/\p{L}+/u', wp_strip_all_tags( $content ) );
+                $reading_time = max( 1, ceil( $word_count / 200 ) ); // 200 palabras por minuto
                 ?>
                 <span class="blog-single__reading-time">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -113,7 +113,7 @@ get_header(); ?>
             if ( ! empty( $tags ) ) :
             ?>
                 <div class="blog-single__tags">
-                    <span class="blog-single__tags-label">Etiquetas:</span>
+                    <span class="blog-single__tags-label"><?php esc_html_e( 'Etiquetas:', 'vguate' ); ?></span>
                     <?php
                     foreach ( $tags as $tag ) {
                         echo '<a href="' . esc_url( get_tag_link( $tag->term_id ) ) . '" class="blog-single__tag">' . esc_html( $tag->name ) . '</a>';
@@ -136,7 +136,7 @@ get_header(); ?>
                                 <line x1="19" y1="12" x2="5" y2="12"></line>
                                 <polyline points="12 19 5 12 12 5"></polyline>
                             </svg>
-                            Anterior
+                            <?php esc_html_e( 'Anterior', 'vguate' ); ?>
                         </span>
                         <span class="blog-single__nav-title"><?php echo esc_html( get_the_title( $prev_post ) ); ?></span>
                     </a>
@@ -145,7 +145,7 @@ get_header(); ?>
                 <?php if ( $next_post ) : ?>
                     <a href="<?php echo esc_url( get_permalink( $next_post ) ); ?>" class="blog-single__nav-link blog-single__nav-link--next">
                         <span class="blog-single__nav-label">
-                            Siguiente
+                            <?php esc_html_e( 'Siguiente', 'vguate' ); ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                 <polyline points="12 5 19 12 12 19"></polyline>

@@ -23,7 +23,7 @@ $total_posts = $category->count;
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                     </svg>
-                    <span>Blog</span>
+                    <span><?php esc_html_e( 'Blog', 'vguate' ); ?></span>
                 </a>
             </li>
             <li class="breadcrumbs__item">
@@ -93,7 +93,7 @@ $total_posts = $category->count;
                                 <?php echo esc_html( get_the_date( 'M d, Y' ) ); ?>
                             </span>
                             <a href="<?php the_permalink(); ?>" class="read-more">
-                                Leer más &rarr;
+                                <?php esc_html_e( 'Leer más', 'vguate' ); ?> &rarr;
                             </a>
                         </div>
                     </div>
@@ -117,7 +117,7 @@ $total_posts = $category->count;
                                 <line x1="19" y1="12" x2="5" y2="12"></line>
                                 <polyline points="12 19 5 12 12 5"></polyline>
                             </svg>
-                            <span>Anterior</span>
+                            <span><?php esc_html_e( 'Anterior', 'vguate' ); ?></span>
                         </a>
                     <?php endif; ?>
                 </div>
@@ -133,7 +133,7 @@ $total_posts = $category->count;
                 <div class="blog-pagination__next">
                     <?php if ( $current_page < $total_pages ) : ?>
                         <a href="<?php echo esc_url( get_pagenum_link( $current_page + 1 ) ); ?>" class="blog-pagination__btn">
-                            <span>Siguiente</span>
+                            <span><?php esc_html_e( 'Siguiente', 'vguate' ); ?></span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -147,50 +147,12 @@ $total_posts = $category->count;
     <?php else : ?>
 
         <div class="no-results">
-            <h2>No se encontraron entradas</h2>
-            <p>No hay entradas en esta categoría todavía.</p>
+            <h2><?php esc_html_e( 'No se encontraron entradas', 'vguate' ); ?></h2>
+            <p><?php esc_html_e( 'No hay entradas en esta categoría todavía.', 'vguate' ); ?></p>
         </div>
 
     <?php endif; ?>
 </main>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // SVG Border Animation
-    function initCardBorders() {
-        var cards = document.querySelectorAll('.blog-post-card');
-
-        cards.forEach(function(card) {
-            var rect = card.querySelector('.card-border-rect');
-            if (!rect) return;
-
-            var width = card.offsetWidth;
-            var height = card.offsetHeight;
-            var rx = 12;
-
-            var perimeter = 2 * (width + height) - 8 * rx + 2 * Math.PI * rx;
-
-            rect.style.strokeDasharray = perimeter;
-            rect.style.strokeDashoffset = '0';
-            card.style.setProperty('--perimeter', perimeter);
-        });
-    }
-
-    initCardBorders();
-    window.addEventListener('resize', initCardBorders);
-
-    // Card clickeable
-    var cards = document.querySelectorAll('.blog-post-card');
-    cards.forEach(function(card) {
-        card.addEventListener('click', function(e) {
-            var link = card.querySelector('.entry-title a');
-            if (link && !e.target.closest('a')) {
-                window.location.href = link.href;
-            }
-        });
-    });
-});
-</script>
 
 <?php
 get_footer();

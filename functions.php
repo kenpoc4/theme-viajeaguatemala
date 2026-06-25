@@ -66,7 +66,10 @@ add_action( 'after_setup_theme', 'vguate_theme_setup' );
  */
 function vguate_redirect_home_to_blog() {
     if ( is_home() && ! is_paged() ) {
-        wp_redirect( home_url( '/blog/' ), 301 );
+        // 302 (temporal): evita que el navegador cachee de forma permanente
+        // la redirección mientras el sitio está en desarrollo. Cambiar a 301
+        // cuando la estructura de la home sea definitiva.
+        wp_safe_redirect( home_url( '/blog/' ), 302 );
         exit;
     }
 }

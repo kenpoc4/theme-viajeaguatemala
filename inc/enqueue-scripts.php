@@ -13,6 +13,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Resource hints: preconnect a Google Fonts para acelerar la primera
+ * pintura de texto (evita el coste de DNS/TLS al cargar las fuentes).
+ *
+ * @param array  $urls     URLs por relación.
+ * @param string $relation Tipo de relación (preconnect, dns-prefetch, etc.).
+ * @return array
+ */
+function vguate_resource_hints( $urls, $relation ) {
+    if ( 'preconnect' === $relation ) {
+        $urls[] = array( 'href' => 'https://fonts.googleapis.com' );
+        $urls[] = array(
+            'href'        => 'https://fonts.gstatic.com',
+            'crossorigin' => 'anonymous',
+        );
+    }
+    return $urls;
+}
+add_filter( 'wp_resource_hints', 'vguate_resource_hints', 10, 2 );
+
+/**
  * Registrar y encolar estilos del tema
  */
 function vguate_enqueue_styles() {
@@ -20,12 +40,13 @@ function vguate_enqueue_styles() {
     // ESTILOS GLOBALES
     // ==========================================
 
-    // Fuentes (Google Fonts)
+    // Fuentes (Google Fonts) — enlace directo en lugar de @import encadenado.
+    // Incluye el peso 800 que usa el diseño (títulos) y display=swap.
     wp_enqueue_style(
         'vguate-fonts',
-        VGUATE_THEME_URI . '/assets/css/global/fonts.css',
+        'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap',
         array(),
-        VGUATE_VERSION
+        null
     );
 
     // Normalize CSS
@@ -170,6 +191,17 @@ function vguate_enqueue_scripts() {
         wp_enqueue_script(
             'vguate-blog-single',
             VGUATE_THEME_URI . '/assets/js/blog-single.js',
+            array(),
+            VGUATE_VERSION,
+            true // Cargar en footer
+        );
+    }
+
+    // Script para el archivo del blog y las categorías (tabs, bordes SVG, tarjetas clicables)
+    if ( is_post_type_archive( 'blog' ) || is_category() ) {
+        wp_enqueue_script(
+            'vguate-blog-archive',
+            VGUATE_THEME_URI . '/assets/js/blog-archive.js',
             array(),
             VGUATE_VERSION,
             true // Cargar en footer
