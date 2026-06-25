@@ -1,8 +1,11 @@
 /**
  * Fuentes - Viaje a Guatemala
  *
- * Importación de Google Fonts
+ * NOTA: Este archivo ya no se encola. Las fuentes ahora se cargan
+ * directamente desde Google Fonts en inc/enqueue-scripts.php
+ * (con preconnect y el peso 800), lo que evita el @import encadenado
+ * y mejora el tiempo de carga. Se conserva como referencia/fallback.
+ *
+ * Poppins - Pesos: 300, 400, 500, 600, 700, 800
  */
-
-/* Poppins - Pesos: 300, 400, 500, 600, 700 */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');

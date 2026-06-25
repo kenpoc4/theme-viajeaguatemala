@@ -64,10 +64,10 @@
 /* Descripción de la categoría */
 .blog-category__description {
     margin-top: var(--spacing-md);
-    font-size: 0.9rem;
+    font-size: 1.0625rem;
     line-height: 1.7;
     color: var(--color-text-light);
-    max-width: 600px;
+    max-width: var(--measure);
 }
 
 /* ==========================================

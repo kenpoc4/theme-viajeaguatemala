@@ -1,73 +1,92 @@
 /**
  * Estilos Globales - Viaje a Guatemala
  *
- * Estilos que se aplican en todo el sitio
+ * Sistema de diseño: tokens, tipografía base, botones y utilidades.
+ * Refinado para una estética editorial/profesional manteniendo la
+ * esencia "Spotify" del tema (verde insignia + acentos cálido/índigo).
  */
 
 /* ==========================================
-   Variables CSS
+   Variables CSS — Design Tokens
    ========================================== */
 :root {
-    /* Colores principales */
-    --color-primary: #1ED760;
-    --color-secondary: #ff7439;
-    --color-contrast: #4100f4;
+    /* --- Marca --- */
+    --color-primary: #1ED760;        /* Verde insignia */
+    --color-primary-dark: #16b14e;
+    --color-secondary: #ff7439;      /* Naranja: acento cálido, uso puntual */
+    --color-contrast: #4100f4;       /* Índigo: color interactivo (enlaces, foco) */
 
-    /* Colores de texto */
-    --color-text: #000000;
-    --color-text-light: #666666;
-    --color-text-muted: #999999;
+    /* --- Tinta y neutros (no negro puro: más suave y profesional) --- */
+    --color-text: #14171c;
+    --color-text-light: #565d6b;
+    --color-text-muted: #828b99;
 
-    /* Colores de fondo */
+    /* --- Superficies --- */
     --color-background: #ffffff;
-    --color-background-alt: #ededed;
+    --color-background-alt: #f3f4f6;
+    --color-surface: #ffffff;
+    --color-surface-2: #f7f8fa;
 
-    /* Colores neutros */
+    /* --- Neutros base --- */
     --color-white: #ffffff;
     --color-black: #000000;
-    --color-border: #cccccc;
+    --color-border: #e4e7ec;
+    --color-border-strong: #d3d8e0;
 
-    /* Tipografía */
+    /* --- Tintes de marca (para fondos sutiles) --- */
+    --tint-primary: rgba(30, 215, 96, 0.10);
+    --tint-contrast: rgba(65, 0, 244, 0.08);
+
+    /* --- Tipografía --- */
     --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     --font-secondary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-    /* Espaciados */
+    /* --- Espaciados --- */
+    --spacing-2xs: 0.25rem;
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 2rem;
     --spacing-lg: 3rem;
     --spacing-xl: 4rem;
+    --spacing-2xl: 6rem;
 
-    /* Tamaños de fuente */
+    /* --- Escala tipográfica (fluida en los tamaños grandes) --- */
+    --font-size-xs: 0.78rem;
     --font-size-sm: 0.875rem;
     --font-size-base: 1rem;
     --font-size-lg: 1.125rem;
-    --font-size-xl: 1.5rem;
-    --font-size-2xl: 2rem;
-    --font-size-3xl: 2.5rem;
+    --font-size-xl: clamp(1.35rem, 1.18rem + 0.75vw, 1.6rem);
+    --font-size-2xl: clamp(1.75rem, 1.35rem + 1.6vw, 2.25rem);
+    --font-size-3xl: clamp(2.25rem, 1.7rem + 2.4vw, 3rem);
 
-    /* Breakpoints */
+    /* Medida de lectura óptima (largo de línea) */
+    --measure: 68ch;
+
+    /* --- Breakpoints --- */
     --breakpoint-sm: 576px;
     --breakpoint-md: 768px;
     --breakpoint-lg: 992px;
     --breakpoint-xl: 1200px;
 
-    /* Transiciones y Animaciones - Estilo Spotify */
+    /* --- Transiciones y easings --- */
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 260ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
-    /* Sombras - Estilo Spotify */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
-    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+    /* --- Sombras en capas (más realistas y suaves) --- */
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.08);
+    --shadow-md: 0 2px 6px rgba(16, 24, 40, 0.06), 0 10px 24px rgba(16, 24, 40, 0.08);
+    --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.12);
+    --shadow-xl: 0 24px 56px rgba(16, 24, 40, 0.18);
 
-    /* Border Radius */
-    --radius-sm: 4px;
-    --radius-md: 8px;
+    /* --- Radios --- */
+    --radius-sm: 6px;
+    --radius-md: 10px;
     --radius-lg: 16px;
     --radius-xl: 24px;
+    --radius-pill: 999px;
 }
 
 /* ==========================================
@@ -79,17 +98,26 @@
 
 html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
     font-family: var(--font-primary);
     font-size: var(--font-size-base);
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.65;
     color: var(--color-text);
     background-color: var(--color-background);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern', 'liga', 'calt';
+}
+
+/* Selección de texto con identidad de marca */
+::selection {
+    background-color: rgba(30, 215, 96, 0.28);
+    color: var(--color-text);
 }
 
 /* ==========================================
@@ -107,20 +135,24 @@ body {
    ========================================== */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-secondary);
-    line-height: 1.2;
+    line-height: 1.18;
     margin-top: 0;
     margin-bottom: var(--spacing-sm);
     font-weight: 600;
+    letter-spacing: -0.012em;
+    text-wrap: balance; /* progresivo: equilibra títulos de varias líneas */
 }
 
 h1 {
     font-size: var(--font-size-3xl);
     font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 h2 {
     font-size: var(--font-size-2xl);
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.018em;
 }
 
 h3 {
@@ -131,88 +163,91 @@ h3 {
 p {
     margin-top: 0;
     margin-bottom: var(--spacing-sm);
+    text-wrap: pretty; /* progresivo: evita líneas viudas */
 }
 
 a {
-    color: var(--color-primary);
+    color: var(--color-contrast);
     text-decoration: none;
-    transition: all var(--transition-base);
+    transition: color var(--transition-base);
     outline: none;
 }
 
 a:hover {
-    color: var(--color-contrast);
-    transform: translateY(-1px);
+    color: var(--color-primary-dark);
 }
 
 a:focus-visible {
     outline: 3px solid var(--color-contrast);
-    outline-offset: 4px;
+    outline-offset: 3px;
     border-radius: var(--radius-sm);
 }
 
-a:active {
-    transform: translateY(0);
-}
-
 /* ==========================================
-   Botones - Estilo Spotify
+   Botones
    ========================================== */
 button,
 .button,
 input[type="submit"],
 input[type="button"] {
     font-family: var(--font-primary);
-    font-weight: 700;
+    font-weight: 600;
     font-size: var(--font-size-base);
-    padding: 14px 32px;
+    line-height: 1;
+    padding: 14px 30px;
     border: none;
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-pill);
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: transform var(--transition-base), box-shadow var(--transition-base),
+                background-color var(--transition-base), color var(--transition-base);
     outline: none;
     text-align: center;
     display: inline-block;
+    letter-spacing: -0.01em;
 }
 
 .button--primary {
     background-color: var(--color-primary);
     color: var(--color-black);
+    box-shadow: 0 6px 16px rgba(30, 215, 96, 0.28);
 }
 
 .button--primary:hover {
     background-color: var(--color-primary);
-    transform: scale(1.04);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 24px rgba(30, 215, 96, 0.38);
 }
 
 .button--secondary {
     background-color: var(--color-contrast);
     color: var(--color-white);
+    box-shadow: 0 6px 16px rgba(65, 0, 244, 0.28);
 }
 
 .button--secondary:hover {
     background-color: var(--color-contrast);
-    transform: scale(1.04);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 24px rgba(65, 0, 244, 0.38);
 }
 
 .button--outline {
     background-color: transparent;
     color: var(--color-text);
-    border: 2px solid var(--color-text);
+    border: 1.5px solid var(--color-border-strong);
+    box-shadow: none;
 }
 
 .button--outline:hover {
     background-color: var(--color-text);
     color: var(--color-white);
-    transform: scale(1.04);
+    border-color: var(--color-text);
+    transform: translateY(-2px);
 }
 
 button:focus-visible,
 .button:focus-visible {
     outline: 3px solid var(--color-contrast);
-    outline-offset: 4px;
+    outline-offset: 3px;
 }
 
 button:active,
@@ -227,7 +262,6 @@ img {
     max-width: 100%;
     height: auto;
     display: block;
-    transition: all var(--transition-base);
 }
 
 /* ==========================================
@@ -247,6 +281,19 @@ img {
 .mb-md { margin-bottom: var(--spacing-md); }
 .mb-lg { margin-bottom: var(--spacing-lg); }
 
+/* Solo para lectores de pantalla */
+.screen-reader-text {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 /* ==========================================
    Page Load - Reveal Animation
    ========================================== */
@@ -264,27 +311,27 @@ img {
 
 /* Clase que activa las animaciones al cargar */
 .is-page-loaded .site-header__branding {
-    animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+    animation: revealUp 0.7s var(--ease-out) 0.1s forwards;
 }
 
 .is-page-loaded .site-header__post-center {
-    animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+    animation: revealUp 0.7s var(--ease-out) 0.25s forwards;
 }
 
 .is-page-loaded .site-header__navigation {
-    animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+    animation: revealUp 0.7s var(--ease-out) 0.3s forwards;
 }
 
 .is-page-loaded .site-header__divider {
-    animation: revealUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+    animation: revealUp 0.6s var(--ease-out) 0.45s forwards;
 }
 
 .is-page-loaded .site-header__info {
-    animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+    animation: revealUp 0.7s var(--ease-out) 0.5s forwards;
 }
 
 .is-page-loaded .site-content {
-    animation: revealUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+    animation: revealUp 0.8s var(--ease-out) 0.4s forwards;
 }
 
 @keyframes revealUp {
@@ -313,7 +360,7 @@ img {
 }
 
 .is-page-loaded .site-header--lateral.has-hero-image::after {
-    animation: heroBlurReveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+    animation: heroBlurReveal 1.4s var(--ease-out) 0.15s forwards;
 }
 
 @keyframes heroBlurReveal {
@@ -331,13 +378,38 @@ img {
    Responsive
    ========================================== */
 @media (max-width: 768px) {
-    :root {
-        --font-size-3xl: 2rem;
-        --font-size-2xl: 1.5rem;
-        --font-size-xl: 1.25rem;
-    }
-
     .container {
         padding: 0 var(--spacing-sm);
+    }
+}
+
+/* ==========================================
+   Accesibilidad — Movimiento reducido
+   Respeta a quien prefiere menos animación: desactiva las
+   animaciones decorativas y deja todo visible y usable.
+   ========================================== */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Asegurar que los elementos con reveal queden visibles */
+    .site-header--lateral .site-header__branding,
+    .site-header--lateral .site-header__post-center,
+    .site-header--lateral .site-header__navigation,
+    .site-header--lateral .site-header__info,
+    .site-header--lateral .site-header__divider,
+    .site-content {
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
