@@ -46,6 +46,11 @@
         $header_class .= ' has-hero-image';
     }
     ?>
+    <?php
+    // Inicializar para evitar avisos si no entran en la rama que los define.
+    $blog_title       = '';
+    $blog_description = '';
+    ?>
     <header class="<?php echo esc_attr( $header_class ); ?>" <?php echo $header_style; ?>>
         <div class="site-header__inner">
             <!-- Logo/Título del sitio -->
@@ -126,12 +131,12 @@
 
                     <?php if ( $audio ) : ?>
                     <!-- Botón de escuchar post -->
-                    <button class="site-header__listen-btn" type="button" aria-label="Escuchar el post" aria-expanded="false">
+                    <button class="site-header__listen-btn" type="button" aria-label="<?php esc_attr_e( 'Escuchar el post', 'vguate' ); ?>" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
                             <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
                         </svg>
-                        <span class="site-header__listen-text">Escuchar el post</span>
+                        <span class="site-header__listen-text"><?php esc_html_e( 'Escuchar el post', 'vguate' ); ?></span>
                     </button>
                     <?php endif; ?>
                 </div>
@@ -139,7 +144,7 @@
                 <?php if ( $audio ) : ?>
                 <!-- Reproductor de audio expandido -->
                 <div class="site-header__audio-player">
-                    <button class="site-header__audio-close" type="button" aria-label="Cerrar reproductor">
+                    <button class="site-header__audio-close" type="button" aria-label="<?php esc_attr_e( 'Cerrar reproductor', 'vguate' ); ?>">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -152,7 +157,7 @@
                         </div>
                         <audio class="site-header__audio" controls preload="metadata">
                             <source src="<?php echo esc_url( $audio['url'] ); ?>" type="audio/mpeg">
-                            Tu navegador no soporta el elemento de audio.
+                            <?php esc_html_e( 'Tu navegador no soporta el elemento de audio.', 'vguate' ); ?>
                         </audio>
                     </div>
                 </div>
@@ -179,7 +184,7 @@
                             <line x1="19" y1="12" x2="5" y2="12"></line>
                             <polyline points="12 19 5 12 12 5"></polyline>
                         </svg>
-                        <span>Volver al blog</span>
+                        <span><?php esc_html_e( 'Volver al blog', 'vguate' ); ?></span>
                     </a>
                 <?php endif; ?>
             </div>

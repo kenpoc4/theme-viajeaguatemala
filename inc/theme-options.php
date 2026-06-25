@@ -242,7 +242,7 @@ function vguate_blog_description_callback() {
  */
 function vguate_posts_per_page_callback() {
     $options = get_option( 'vguate_theme_options' );
-    $value = isset( $options['posts_per_page'] ) ? $options['posts_per_page'] : 1;
+    $value = isset( $options['posts_per_page'] ) ? $options['posts_per_page'] : 6;
     ?>
     <input
         type="number"
@@ -664,7 +664,7 @@ function vguate_get_logo_img( $type = 'logo', $attr = array() ) {
  */
 function vguate_get_posts_per_page() {
     $options = get_option( 'vguate_theme_options' );
-    $value = isset( $options['posts_per_page'] ) ? absint( $options['posts_per_page'] ) : 1;
+    $value = isset( $options['posts_per_page'] ) ? absint( $options['posts_per_page'] ) : 6;
     return max( 1, $value );
 }
 

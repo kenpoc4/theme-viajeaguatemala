@@ -11,10 +11,10 @@ get_header(); ?>
     <!-- Tabs de navegación -->
     <nav class="blog-tabs">
         <button class="blog-tab blog-tab--active" data-tab="posts">
-            Posts recientes
+            <?php esc_html_e( 'Posts recientes', 'vguate' ); ?>
         </button>
         <button class="blog-tab" data-tab="categorias">
-            Categorías
+            <?php esc_html_e( 'Categorías', 'vguate' ); ?>
         </button>
     </nav>
 
@@ -51,7 +51,7 @@ get_header(); ?>
                                     <?php echo esc_html( get_the_date( 'M d, Y' ) ); ?>
                                 </span>
                                 <a href="<?php the_permalink(); ?>" class="read-more">
-                                    Leer más →
+                                    <?php esc_html_e( 'Leer más', 'vguate' ); ?> &rarr;
                                 </a>
                             </div>
                         </div>
@@ -75,7 +75,7 @@ get_header(); ?>
                                     <line x1="19" y1="12" x2="5" y2="12"></line>
                                     <polyline points="12 19 5 12 12 5"></polyline>
                                 </svg>
-                                <span>Anterior</span>
+                                <span><?php esc_html_e( 'Anterior', 'vguate' ); ?></span>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -91,7 +91,7 @@ get_header(); ?>
                     <div class="blog-pagination__next">
                         <?php if ( $current_page < $total_pages ) : ?>
                             <a href="<?php echo esc_url( get_pagenum_link( $current_page + 1 ) ); ?>" class="blog-pagination__btn">
-                                <span>Siguiente</span>
+                                <span><?php esc_html_e( 'Siguiente', 'vguate' ); ?></span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -105,8 +105,8 @@ get_header(); ?>
         <?php else : ?>
 
             <div class="no-results">
-                <h2>No se encontraron entradas</h2>
-                <p>No hay entradas de blog publicadas todavía.</p>
+                <h2><?php esc_html_e( 'No se encontraron entradas', 'vguate' ); ?></h2>
+                <p><?php esc_html_e( 'No hay entradas de blog publicadas todavía.', 'vguate' ); ?></p>
             </div>
 
         <?php endif; ?>
@@ -135,71 +135,12 @@ get_header(); ?>
             </ul>
         <?php else : ?>
             <div class="no-results">
-                <h2>No hay categorías</h2>
-                <p>No se han creado categorías todavía.</p>
+                <h2><?php esc_html_e( 'No hay categorías', 'vguate' ); ?></h2>
+                <p><?php esc_html_e( 'No se han creado categorías todavía.', 'vguate' ); ?></p>
             </div>
         <?php endif; ?>
     </div>
 </main>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Tabs functionality
-    const tabs = document.querySelectorAll('.blog-tab');
-    const contents = document.querySelectorAll('.blog-tab-content');
-
-    tabs.forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            const targetTab = this.getAttribute('data-tab');
-
-            tabs.forEach(function(t) {
-                t.classList.remove('blog-tab--active');
-            });
-            contents.forEach(function(c) {
-                c.classList.remove('blog-tab-content--active');
-            });
-
-            this.classList.add('blog-tab--active');
-            document.querySelector('[data-tab-content="' + targetTab + '"]').classList.add('blog-tab-content--active');
-        });
-    });
-
-    // SVG Border Animation
-    function initCardBorders() {
-        const cards = document.querySelectorAll('.blog-post-card');
-
-        cards.forEach(function(card) {
-            const rect = card.querySelector('.card-border-rect');
-            if (!rect) return;
-
-            const width = card.offsetWidth;
-            const height = card.offsetHeight;
-            const rx = 12; // border-radius
-
-            // Calcular perímetro aproximado del rectángulo redondeado
-            const perimeter = 2 * (width + height) - 8 * rx + 2 * Math.PI * rx;
-
-            rect.style.strokeDasharray = perimeter;
-            rect.style.strokeDashoffset = '0'; // Borde visible por defecto
-            card.style.setProperty('--perimeter', perimeter);
-        });
-    }
-
-    initCardBorders();
-    window.addEventListener('resize', initCardBorders);
-
-    // Card clickeable
-    const cards = document.querySelectorAll('.blog-post-card');
-    cards.forEach(function(card) {
-        card.addEventListener('click', function(e) {
-            const link = card.querySelector('.entry-title a');
-            if (link && !e.target.closest('a')) {
-                window.location.href = link.href;
-            }
-        });
-    });
-});
-</script>
 
 <?php
 get_footer();

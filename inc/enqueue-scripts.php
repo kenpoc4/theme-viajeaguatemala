@@ -175,5 +175,16 @@ function vguate_enqueue_scripts() {
             true // Cargar en footer
         );
     }
+
+    // Script para el archivo del blog y las categorías (tabs, bordes SVG, tarjetas clicables)
+    if ( is_post_type_archive( 'blog' ) || is_category() ) {
+        wp_enqueue_script(
+            'vguate-blog-archive',
+            VGUATE_THEME_URI . '/assets/js/blog-archive.js',
+            array(),
+            VGUATE_VERSION,
+            true // Cargar en footer
+        );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'vguate_enqueue_scripts' );
